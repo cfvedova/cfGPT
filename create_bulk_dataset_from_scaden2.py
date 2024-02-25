@@ -19,7 +19,7 @@ print(y.shape)
 
 #Prints out txt with all celltypes 
 y.columns=['Celltype']
-celltypes_file='_celltypes.txt'
+celltypes_file='_celltypes1.txt'
 print('out:'+celltypes_file)
 y.to_csv(celltypes_file, sep='\t', index=False)
 
@@ -29,7 +29,7 @@ print(x.shape)
 
 x.columns=adata.var_names
 x = x.round().astype(int)
-counts_file='_counts.txt'
+counts_file='_counts1.txt'
 print('out:'+counts_file)
 x.to_csv(counts_file, sep='\t', index=False)
 
