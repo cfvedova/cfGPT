@@ -1,5 +1,6 @@
 #Take in h5ad file and convert it into format suitable for scaden 
 
+import csv
 import anndata
 import pandas as pd
 
@@ -34,8 +35,6 @@ print('out:'+counts_file)
 x.to_csv(counts_file, sep='\t', index=False)
 
 #preprocessing
-
-import csv
 
 def delete_second_column_in_place(input_file):
     # Read the data
@@ -78,8 +77,8 @@ def convert_to_tab_separated(input_file, output_file):
 # Example usage
 input_file = './cfrna_exon_counts_protein_coding.csv'  # Replace with your input file name
 output_file = './cfrna_exon_counts_protein_coding.txt'  # Replace with your desired output file name
-convert_to_tab_separated(input_file, output_file)
+convert_to_tab_separated(input_file, output_file)   
 
 #Scaden will simulate bulk data based on given celltypes + counts txt, spits out data.h5ad 
 
-!scaden simulate --data TabulaSapiens_3_2_2/ -n 50000 --pattern _counts.txt
+#Call os.system("scaden simulate --data TabulaSapiens_3_2_2/ -n 50000 --pattern _counts.txt")
