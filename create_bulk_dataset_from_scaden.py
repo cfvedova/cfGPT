@@ -7,7 +7,7 @@ import pandas as pd
 import sys
 import os
    
-h5adfile='./TabulaSapiens_3_2_2.h5ad'
+h5adfile='Dataset/TabulaSapiens.h5ad'
 print('processing:'+ h5adfile)
 
 bname=os.path.splitext(os.path.basename(h5adfile))[0]
