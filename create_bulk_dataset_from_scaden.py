@@ -1,13 +1,12 @@
 #Take in h5ad file and convert it into format suitable for scaden 
 
-import csv
 import anndata
 import pandas as pd
 
 import sys
 import os
    
-h5adfile='Dataset/TabulaSapiens.h5ad'
+h5adfile='./Dataset/TabulaSapiens.h5ad'
 print('processing:'+ h5adfile)
 
 bname=os.path.splitext(os.path.basename(h5adfile))[0]
@@ -35,6 +34,8 @@ print('out:'+counts_file)
 x.to_csv(counts_file, sep='\t', index=False)
 
 #preprocessing
+
+""" import csv
 
 def delete_second_column_in_place(input_file):
     # Read the data
@@ -81,4 +82,4 @@ convert_to_tab_separated(input_file, output_file)
 
 #Scaden will simulate bulk data based on given celltypes + counts txt, spits out data.h5ad 
 
-#Call os.system("scaden simulate --data TabulaSapiens_3_2_2/ -n 50000 --pattern _counts.txt")
+!scaden simulate --data TabulaSapiens_3_2_2/ -n 50000 --pattern _counts.txt """
