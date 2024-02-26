@@ -18,17 +18,17 @@ y = pd.DataFrame(adata.obs['cell_ontology_class'])
 print(y.shape)
 
 #Prints out txt with all celltypes 
-y.columns=['Celltype']
+""" y.columns=['Celltype']
 celltypes_file='_celltypes1.txt'
 print('out:'+celltypes_file)
-y.to_csv(celltypes_file, sep='\t', index=False)
+y.to_csv(celltypes_file, sep='\t', index=False) """
 
 #Prints out txt with corresponding counts 
 x = pd.DataFrame(adata.layers['raw_counts'])
 print(x.shape)
 
 x.columns=adata.var_names
-x = x.round().astype(int)
+x = x.astype(int)
 counts_file='_counts1.txt'
 print('out:'+counts_file)
 x.to_csv(counts_file, sep='\t', index=False)
