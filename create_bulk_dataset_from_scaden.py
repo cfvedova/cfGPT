@@ -23,12 +23,24 @@ celltypes_file='_celltypes.txt'
 print('out:'+celltypes_file)
 y.to_csv(celltypes_file, sep='\t', index=False)
 
-#Prints out txt with corresponding counts 
-x = pd.DataFrame(adata.layers['raw_counts'].todense())
+#Stream data so it does not break
+data_amount = y.shape[0]
+division_amount = 1000
+for i in range(data_amount // division_amount):
+    batch = adata.layers['raw_counts'][i:i+division_amount]
+    batch = batch.round().astype(int)
+    adata.layers['raw_counts'][i:i+division_amount] = batch
+    print(f"Processing batch number: {i+1} / {data_amount // division_amount}")
+
+batch = adata.layers['raw_counts'][i+division_amount:-1]
+batch = batch.round().astype(int)
+adata.layers['raw_counts'][i+division_amount:-1] = batch
+
+gene_names = adata.var_names
+x = pd.DataFrame(adata.layers['raw_counts'])
 print(x.shape)
 
-x.columns=adata.var_names
-x = x.round().astype(int)
+x.columns=gene_names
 counts_file='_counts.txt'
 print('out:'+counts_file)
 x.to_csv(counts_file, sep='\t', index=False)

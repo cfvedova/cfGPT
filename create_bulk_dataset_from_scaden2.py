@@ -35,6 +35,7 @@ print('out:'+counts_file)
 x.to_csv(counts_file, sep='\t', index=False)
 
 #preprocessing
+#(483152, 58870) - TabulaSapiens
 
 """ import csv
 
