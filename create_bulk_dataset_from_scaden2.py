@@ -14,7 +14,7 @@ bname=os.path.splitext(os.path.basename(h5adfile))[0]
 adata=anndata.read_h5ad(h5adfile)
 print(adata)
 
-y = pd.DataFrame(adata.obs['cell_ontology_class'][:100000])
+y = pd.DataFrame(adata.obs['cell_ontology_class'][:100000, :])
 print(y.shape)
 
 #Prints out txt with all celltypes 
@@ -25,7 +25,7 @@ y.to_csv(celltypes_file, sep='\t', index=False)
 
 #Prints out txt with corresponding counts 
 gene_names = adata.var_names
-x = pd.DataFrame(adata.layers['raw_counts'][:100000])
+x = pd.DataFrame(adata.layers['raw_counts'][:100000, :])
 print(x.shape)
 
 x.columns=gene_names
