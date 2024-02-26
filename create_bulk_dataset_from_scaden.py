@@ -11,7 +11,7 @@ print('processing:'+ h5adfile)
 
 bname=os.path.splitext(os.path.basename(h5adfile))[0]
 
-adata=anndata.read(h5adfile)
+adata=anndata.read_h5ad(h5adfile)
 print(adata)
 
 y = pd.DataFrame(adata.obs['cell_ontology_class'])
