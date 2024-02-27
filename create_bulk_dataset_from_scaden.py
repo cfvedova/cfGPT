@@ -2,6 +2,7 @@
 
 import anndata
 import pandas as pd
+import numpy as np
 
 import sys
 import os
@@ -27,9 +28,7 @@ y.to_csv(celltypes_file, sep='\t', index=False)
 data_amount = y.shape[0]
 division_amount = 1000
 for i in range(data_amount // division_amount):
-    batch = adata.layers['raw_counts'][i:i+division_amount]
-    batch = batch.round().astype(int)
-    adata.layers['raw_counts'][i:i+division_amount] = batch
+    adata.layers['raw_counts'][i:i+division_amount] = np.round(adata.layers['raw_counts'][i:i+division_amount])
     print(f"Processing batch number: {i+1} / {data_amount // division_amount}")
 
 batch = adata.layers['raw_counts'][i+division_amount:-1]
