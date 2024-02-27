@@ -24,18 +24,9 @@ celltypes_file='_celltypes.txt'
 print('out:'+celltypes_file)
 y.to_csv(celltypes_file, sep='\t', index=False)
 
-#Stream data so it does not break
-data_amount = y.shape[0]
-division_amount = 1000
-for i in range(data_amount // division_amount):
-    adata.layers['raw_counts'][i:i+division_amount] = np.round(adata.layers['raw_counts'][i:i+division_amount])
-    print(f"Processing batch number: {i+1} / {data_amount // division_amount}")
-
-batch = adata.layers['raw_counts'][i+division_amount:-1]
-batch = batch.round().astype(int)
-adata.layers['raw_counts'][i+division_amount:-1] = batch
-
+#Create x as integer counts
 gene_names = adata.var_names
+adata.layers['raw_counts'] = adata.layers['raw_counts'].astype(int)
 x = pd.DataFrame(adata.layers['raw_counts'])
 print(x.shape)
 
