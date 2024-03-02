@@ -26,8 +26,8 @@ y.to_csv(celltypes_file, sep='\t', index=False)
 
 #Create x as integer counts
 gene_names = adata.var_names
-adata.layers['raw_counts'].data = adata.layers['raw_counts'].data.astype(int)
-x = pd.DataFrame(adata.layers['raw_counts'])
+adata.layers['raw_counts'] = adata.layers['raw_counts'].astype(int)
+x = pd.DataFrame(adata.layers['raw_counts'].A)
 print(x.shape)
 
 x.columns=gene_names
