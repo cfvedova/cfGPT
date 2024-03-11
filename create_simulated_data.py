@@ -27,6 +27,9 @@ print(adata)
 cfrna_data = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
                          sep='\t', header=None, names=['gene_names', 'counts'])
 cfrna_data['counts'] = cfrna_data['counts'].astype(float)
+cfrna_data = cfrna_data.set_index('gene_names')
+cfrna_data = cfrna_data.transpose()
+cfrna_data = cfrna_data.sort_index(axis=1)
 print("Contents of cfrna_data:\n", cfrna_data)
 common_genes = set(adata.var_names) & set(cfrna_df.columns)
 common_gene_indices = [idx for idx, gene in enumerate(adata.var_names) if gene in common_genes]
@@ -48,8 +51,7 @@ print(celltype_labels)
 celltype_labels.columns = ['Celltype']
 all_cell_types = pd.unique(celltype_labels['Celltype'])
 
-gene_symbols = adata.var['gene_symbol']
-bulk_rnaseq_mean_expression_df = pd.DataFrame(columns=gene_symbols)
+bulk_rnaseq_mean_expression_df = pd.DataFrame(columns=common_gene_indices)
 cell_type_proportions_list = []
 cell_type_proportions_df = pd.DataFrame(columns=all_cell_types)
 
@@ -78,7 +80,7 @@ for sample_num in tqdm.tqdm(range(num_samples)):
     selected_cells = selected_cells.sum(axis=0)
 
     # Calculate sum of expression levels for each gene
-    selected_cells = pd.DataFrame(selected_cells.tolist(), columns=gene_symbols, index=[f"Sample_{sample_num}"])
+    selected_cells = pd.DataFrame(selected_cells.tolist(), columns=common_gene_indices, index=[f"Sample_{sample_num}"])
     bulk_rnaseq_mean_expression_df = pd.concat([bulk_rnaseq_mean_expression_df, selected_cells])
 
     # Normalize the cell counts to get proportions
