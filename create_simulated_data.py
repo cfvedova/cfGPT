@@ -23,6 +23,26 @@ bname=os.path.splitext(os.path.basename(h5adfile))[0]
 adata=ad.read_h5ad(h5adfile)
 print(adata)
 
+#Cross adata with cfrna data
+cfrna_data = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
+                         sep='\t', header=None, names=['gene_names', 'counts'])
+cfrna_data['counts'] = cfrna_data['counts'].astype(float)
+print("Contents of cfrna_data:\n", cfrna_data)
+common_genes = set(adata.var_names) & set(cfrna_df.columns)
+common_gene_indices = [idx for idx, gene in enumerate(adata.var_names) if gene in common_genes]
+print("Print adata common genes")
+print(adata[:, common_gene_indices])
+adata = adata[:, common_gene_indices]
+print(adata)
+
+# Transpose to match X
+cfrna_df = cfrna_df.transpose()
+
+# Alphabetically ordering the genes
+cfrna_df = cfrna_df.sort_index(axis=1)
+print("Contents of cfrna_df:\n", cfrna_df)
+
+
 celltype_labels = pd.DataFrame(adata.obs['cell_ontology_class'])
 print(celltype_labels)
 celltype_labels.columns = ['Celltype']
