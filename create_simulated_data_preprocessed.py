@@ -1,31 +1,11 @@
 import anndata as ad
 import os
 import random
-import argparse
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-from keras.models import Sequential
-from keras.layers import Dense, Softmax
-from tensorflow.keras.models import load_model
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from scipy.stats import pearsonr
-from scipy.optimize import nnls
 from scipy import sparse
-from joblib import dump
 from joblib import load
-from sklearn.metrics import confusion_matrix
-from sklearn.inspection import permutation_importance
-import seaborn as sns
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import scale
-from sklearn.preprocessing import StandardScaler
-import scipy.sparse as sp
-
 
 # Hyperparameters
 num_samples = 1000
