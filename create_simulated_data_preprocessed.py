@@ -12,7 +12,7 @@ print("\nNumber of bulk RNAseq samples to simulate =", num_samples)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", num_cells_to_extract)
 
 print("Loading scRNA-seq data...")
-adata = ad.read_h5ad("./Dataset/TabulaSapiens.h5ad")
+adata=ad.read_h5ad("./Dataset/TabulaSapiens.h5ad")
 
 print("Loaded scRNAseq data")
 
