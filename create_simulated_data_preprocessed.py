@@ -3,6 +3,7 @@ import os
 import random
 import numpy as np
 import pandas as pd
+import tqdm
 from scipy import sparse
 
 # Hyperparameters
@@ -118,7 +119,7 @@ cells_by_type = {cell_type: expression_data[expression_data['cell'] == cell_type
 all_cell_types_set = set(all_cell_types)
 
 # Loop to create the simulated samples
-for sample_num in range(1, num_samples + 1):
+for sample_num in tqdm.tqdm(range(1, num_samples + 1)):
     selected_cells_list = []
     random_proportions = np.random.dirichlet(np.ones(len(all_cell_types)), size=1)[0]
     cell_type_proportions = pd.Series(index=all_cell_types, dtype=float).fillna(0)
