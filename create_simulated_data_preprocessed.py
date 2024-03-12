@@ -4,8 +4,6 @@ import random
 import numpy as np
 import pandas as pd
 from scipy import sparse
-from joblib import load
-from sklearn.preprocessing import scale
 
 # Hyperparameters
 num_samples = 1000
