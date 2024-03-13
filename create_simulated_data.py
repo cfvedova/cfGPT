@@ -26,24 +26,25 @@ print(adata)
 #Cross adata with cfrna data
 cfrna_data = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
                          sep='\t', header=None, names=['gene_names', 'counts'])
-cfrna_data['counts'] = cfrna_data['counts'].astype(float)
+cfrna_data['counts'] = cfrna_data['counts'].astype(int)
 cfrna_data = cfrna_data.set_index('gene_names')
 cfrna_data = cfrna_data.transpose()
 cfrna_data = cfrna_data.sort_index(axis=1)
 print("Contents of cfrna_data:\n", cfrna_data)
 common_genes = set(adata.var_names) & set(cfrna_data.columns)
 common_gene_indices = [idx for idx, gene in enumerate(adata.var_names) if gene in common_genes]
+common_gene_genes = [gene for idx, gene in enumerate(adata.var_names) if gene in common_genes]
 print("Print adata common genes")
 print(adata[:, common_gene_indices])
 adata = adata[:, common_gene_indices]
 print(adata)
 
 celltype_labels = pd.DataFrame(adata.obs['cell_ontology_class'])
-print(celltype_labels)
 celltype_labels.columns = ['Celltype']
 all_cell_types = pd.unique(celltype_labels['Celltype'])
 
-bulk_rnaseq_mean_expression_df = pd.DataFrame(columns=common_gene_indices)
+raw_counts = adata.layers['raw_counts'].todense()
+bulk_rnaseq_mean_expression_df = pd.DataFrame(columns=common_gene_genes)
 cell_type_proportions_list = []
 cell_type_proportions_df = pd.DataFrame(columns=all_cell_types)
 
@@ -56,13 +57,14 @@ for sample_num in tqdm.tqdm(range(num_samples)):
     random_proportions = np.random.dirichlet(np.ones(len(all_cell_types)))
     cell_type_proportions = pd.Series(index=all_cell_types, dtype=float).fillna(0)
     total_cells = 0
+    print("here")
 
     for cell_type, proportion in zip(all_cell_types, random_proportions):
         num_cells_this_type = int(proportion * num_cells_to_extract)
         cells_of_this_type = cells_by_type[cell_type]
         num_cells_this_type = min(num_cells_this_type, len(cells_of_this_type))
         sampled_cells_indexes = np.random.choice(cells_of_this_type, num_cells_this_type)
-        samples = adata.layers['raw_counts'][sampled_cells_indexes].todense().astype(int)
+        samples = raw_counts[sampled_cells_indexes,:].astype(int)
         selected_cells_list.append(samples)
         cell_type_proportions[cell_type] = num_cells_this_type
         total_cells += num_cells_this_type
@@ -72,7 +74,7 @@ for sample_num in tqdm.tqdm(range(num_samples)):
     selected_cells = selected_cells.sum(axis=0)
 
     # Calculate sum of expression levels for each gene
-    selected_cells = pd.DataFrame(selected_cells.tolist(), columns=common_gene_indices, index=[f"Sample_{sample_num}"])
+    selected_cells = pd.DataFrame(selected_cells.tolist(), columns=common_gene_genes, index=[f"Sample_{sample_num}"])
     bulk_rnaseq_mean_expression_df = pd.concat([bulk_rnaseq_mean_expression_df, selected_cells])
 
     # Normalize the cell counts to get proportions

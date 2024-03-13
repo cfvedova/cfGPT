@@ -7,8 +7,8 @@ import tqdm
 from scipy import sparse
 
 # Hyperparameters
-num_samples = 1000
-num_cells_to_extract = 5000
+num_samples = 50000
+num_cells_to_extract = 1000
 print("\nNumber of bulk RNAseq samples to simulate =", num_samples)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", num_cells_to_extract)
 
@@ -137,17 +137,11 @@ for sample_num in tqdm.tqdm(range(1, num_samples + 1)):
     # Concatenate all the sampled cells for this iteration into a DataFrame
     selected_cells = pd.concat(selected_cells_list)
 
-    # Print actual number of cells in this sample
-    print(f"Actual number of cells in sample {sample_num}: {total_cells}")
-
     # Calculate sum of expression levels for each gene
     bulk_rnaseq_mean_expression_list.append(selected_cells.drop(columns=['cell']).sum())
 
     # Normalize the cell counts to get proportions
     cell_type_proportions /= cell_type_proportions.sum()
-
-    # Print the sum of each row to ensure it is equal to 1
-    print(f"Sum of proportions in sample {sample_num}: {cell_type_proportions.sum()}")
 
     cell_type_proportions_list.append(cell_type_proportions)
 
