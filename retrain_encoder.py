@@ -162,9 +162,9 @@ if config.load_model is not None:
     nlayers = model_configs["nlayers"]
     n_layers_cls = model_configs["n_layers_cls"]
 else:
-    embsize = config.layer_size 
+    embsize = config.layer_size
     nhead = config.nhead
-    nlayers = config.nlayers  
+    nlayers = config.nlayers
     d_hid = config.layer_size
 
 
