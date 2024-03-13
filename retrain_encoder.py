@@ -1,4 +1,5 @@
 # %%
+import anndata as ad
 import copy
 import gc
 import json
@@ -48,7 +49,7 @@ os.environ["KMP_WARNINGS"] = "off"
 
 hyperparameter_defaults = dict(
     seed=42,
-    dataset_name="PBMC_10K",
+    dataset_name="tabula_sapiens",
     do_train=True,
     load_model="save/scGPT_bc",
     mask_ratio=0.4,
@@ -111,11 +112,13 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 
 # %% [markdown]
 # ## Loading and preparing data
-if dataset_name == "PBMC_10K":
-    adata = scvi.data.pbmc_dataset()  # 11990 × 3346
+if dataset_name == "tabula_spaiens":
+    with open("./Dataset/bulk_data.csv") as your_data:
+        adata = ad.read_csv(your_data)
+    label_data = pd.read_csv("./Dataset/label_data.csv")
     ori_batch_col = "batch"
-    adata.obs["celltype"] = adata.obs["str_labels"].astype("category")
-    adata.var = adata.var.set_index("gene_symbols")
+    adata.obsm["cell_proportions"] = label_data.astype("category")
+    adata.var["gene_symbols"] = adata.var.index
     data_is_raw = True
 
 
@@ -162,9 +165,9 @@ if config.load_model is not None:
     nlayers = model_configs["nlayers"]
     n_layers_cls = model_configs["n_layers_cls"]
 else:
-    embsize = config.layer_size 
+    embsize = config.layer_size
     nhead = config.nhead
-    nlayers = config.nlayers  
+    nlayers = config.nlayers
     d_hid = config.layer_size
 
 
