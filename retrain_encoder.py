@@ -51,7 +51,7 @@ hyperparameter_defaults = dict(
     seed=42,
     dataset_name="tabula_sapiens",
     do_train=True,
-    load_model="save/scGPT_bc",
+    load_model="save/scGPT_human",
     mask_ratio=0.4,
     epochs=30,
     n_bins=51,
@@ -94,7 +94,7 @@ n_input_bins = config.n_bins
 
 n_hvg = 1200  # number of highly variable genes
 max_seq_len = n_hvg + 1
-per_seq_batch_sample = True
+per_seq_batch_sample = False
 DSBN = True  # Domain-spec batchnorm
 explicit_zero_prob = True  # whether explicit bernoulli for zeros
 
@@ -112,13 +112,13 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 
 # %% [markdown]
 # ## Loading and preparing data
-if dataset_name == "tabula_spaiens":
-    with open("./Dataset/bulk_data.csv") as your_data:
-        adata = ad.read_csv(your_data)
+if dataset_name == "tabula_sapiens":
+    with open("./Dataset/bulk_data.csv") as dataset_file:
+        adata = ad.read_csv(dataset_file)
     label_data = pd.read_csv("./Dataset/label_data.csv")
     ori_batch_col = "batch"
     adata.obsm["cell_proportions"] = label_data.astype("category")
-    adata.var["gene_symbols"] = adata.var.index
+    adata.obs["batch"] = np.zeros(len(label_data.index))
     data_is_raw = True
 
 
@@ -382,6 +382,7 @@ def prepare_dataloader(
 # %% [markdown]
 # # Create and finetune scGPT
 
+print("Initializing model.")
 # %%
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
