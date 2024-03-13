@@ -31,20 +31,12 @@ cfrna_data = cfrna_data.set_index('gene_names')
 cfrna_data = cfrna_data.transpose()
 cfrna_data = cfrna_data.sort_index(axis=1)
 print("Contents of cfrna_data:\n", cfrna_data)
-common_genes = set(adata.var_names) & set(cfrna_df.columns)
+common_genes = set(adata.var_names) & set(cfrna_data.columns)
 common_gene_indices = [idx for idx, gene in enumerate(adata.var_names) if gene in common_genes]
 print("Print adata common genes")
 print(adata[:, common_gene_indices])
 adata = adata[:, common_gene_indices]
 print(adata)
-
-# Transpose to match X
-cfrna_df = cfrna_df.transpose()
-
-# Alphabetically ordering the genes
-cfrna_df = cfrna_df.sort_index(axis=1)
-print("Contents of cfrna_df:\n", cfrna_df)
-
 
 celltype_labels = pd.DataFrame(adata.obs['cell_ontology_class'])
 print(celltype_labels)
