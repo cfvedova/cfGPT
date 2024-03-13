@@ -97,7 +97,7 @@ n_hvg = 1200  # number of highly variable genes
 max_seq_len = n_hvg + 1
 per_seq_batch_sample = False
 DSBN = True  # Domain-spec batchnorm
-explicit_zero_prob = True  # whether explicit bernoulli for zeros
+explicit_zero_prob = False  # whether explicit bernoulli for zeros
 
 # %%
 dataset_name = config.dataset_name
@@ -118,6 +118,12 @@ if dataset_name == "tabula_sapiens":
         adata = ad.read_csv(dataset_file)
     label_data = pd.read_csv("./Dataset/label_data.csv")
     ori_batch_col = "batch"
+    print(adata)
+    print(adata.var)
+    print(adata.obs)
+    print("Printing labels")
+    print(label_data)
+    print(label_data.astype("category"))
     adata.obsm["cell_proportions"] = label_data.astype("category")
     adata.obs["batch"] = np.zeros(len(label_data.index))
     data_is_raw = True
@@ -206,8 +212,8 @@ all_counts = (
 )
 genes = adata.var["gene_name"].tolist()
 
-celltypes_labels = adata.obs["celltype"].tolist()  # make sure count from 0
-num_types = len(set(celltypes_labels))
+celltypes_labels = adata.obs["cell_proportions"].tolist()  # make sure count from 0
+print(celltypes_labels)
 celltypes_labels = np.array(celltypes_labels)
 
 batch_ids = adata.obs["batch_id"].tolist()
@@ -629,7 +635,7 @@ def eval_testdata(
         else adata_t.layers[input_layer_key]
     )
 
-    celltypes_labels = adata_t.obs["celltype"].tolist()
+    celltypes_labels = adata_t.obs["cell_proportions"].tolist()
     celltypes_labels = np.array(celltypes_labels)
 
     batch_ids = adata_t.obs["batch_id"].tolist()
