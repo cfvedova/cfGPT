@@ -206,8 +206,6 @@ filter_gene_by_counts = False
 
 adata_test = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
                          sep='\t', header=None, names=['gene_names', 'counts'])
-adata_test.obs["celltype"] = adata_test.obs["Factor Value[inferred cell type - authors labels]"].astype("category")
-adata_test.obs["batch_id"]  = adata_test.obs["str_batch"] = "1"
                 
 # make the batch category column
 batch_id_labels = adata.obs["str_batch"].astype("category").cat.codes.values
@@ -269,13 +267,10 @@ preprocessor = Preprocessor(
     result_binned_key="X_binned",  # the key in adata.layers to store the binned data
 )
 
-
-adata_test = adata[adata.obs["str_batch"] == "1"]
 adata = adata[adata.obs["str_batch"] == "0"]
 
 # Filter genes, counts, normalization, binning, etc.
 preprocessor(adata, batch_key=None)
-preprocessor(adata_test, batch_key=None)
 
 input_layer_key = {  # the values of this map coorespond to the keys in preprocessing
     "normed_raw": "X_normed",
