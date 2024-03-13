@@ -54,9 +54,9 @@ warnings.filterwarnings('ignore')
 ### DEFAULT HYPERPARAMETERS ###
 hyperparameter_defaults = dict(
     seed=0,
-    dataset_name="Tabula_Sapiens_Bulk",
+    dataset_name="tabula_sapiens",
     do_train=True,
-    load_model="../save/scGPT_human",
+    load_model="save/scGPT_human",
     mask_ratio=0.0,
     epochs=10,
     n_bins=51,
@@ -187,24 +187,33 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 # Un-important columns: batch_id, str_batch (Assigned based on train or test)
 data_dir = Path(f"../data/{dataset_name}")
 
-adata_x = pd.read_csv(f"{data_dir}__counts", sep='\t', index=False)
-adata = sc.read(data_dir / f"{dataset_name}.h5ad")
-adata_test = sc.read(data_dir / f"{dataset_name}_test.h5ad")
-adata.obs["celltype"] = adata.obs["Factor Value[inferred cell type - authors labels]"].astype("category")
-adata_test.obs["celltype"] = adata_test.obs["Factor Value[inferred cell type - authors labels]"].astype("category")
+with open("./Dataset/bulk_data.csv") as dataset_file:
+    adata = ad.read_csv(dataset_file)
+label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
+ori_batch_col = "batch"
+print(adata)
+print(adata.var)
+print(adata.obs)
+print("Printing labels")
+print(label_data)
+print(label_data.astype("category"))
+adata.obsm["cell_proportions"] = label_data.astype("category")
+data_is_raw = True
 adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
-adata_test.obs["batch_id"]  = adata_test.obs["str_batch"] = "1" 
-adata.var.set_index(adata.var["gene_name"], inplace=True)
-adata_test.var.set_index(adata.var["gene_name"], inplace=True)
 data_is_raw = False
 filter_gene_by_counts = False
+
+adata_test = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
+                         sep='\t', header=None, names=['gene_names', 'counts'])
+adata_test.obs["celltype"] = adata_test.obs["Factor Value[inferred cell type - authors labels]"].astype("category")
+adata_test.obs["batch_id"]  = adata_test.obs["str_batch"] = "1"
                 
 # make the batch category column
 batch_id_labels = adata.obs["str_batch"].astype("category").cat.codes.values
 adata.obs["batch_id"] = batch_id_labels
+
 celltype_id_labels = adata.obs["celltype"].astype("category").cat.codes.values
-celltypes = adata.obs["celltype"].unique()
-num_types = len(np.unique(celltype_id_labels))
+num_types = len(np.unique(label_data.columns))
 id2type = dict(enumerate(adata.obs["celltype"].astype("category").cat.categories))
 adata.obs["celltype_id"] = celltype_id_labels
 adata.var["gene_name"] = adata.var.index.tolist()
