@@ -192,13 +192,7 @@ with open("./Dataset/bulk_data.csv") as dataset_file:
     adata = ad.read_csv(dataset_file)
 label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
 ori_batch_col = "batch"
-print(adata)
-print(adata.var)
-print(adata.obs)
-print("Printing labels")
-print(label_data)
-print(label_data.astype("category"))
-adata.obsm["cell_proportions"] = label_data.astype("category")
+adata.obsm["cell_proportions"] = label_data
 data_is_raw = True
 adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
 data_is_raw = False
@@ -211,10 +205,7 @@ adata_test = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
 batch_id_labels = adata.obs["str_batch"].astype("category").cat.codes.values
 adata.obs["batch_id"] = batch_id_labels
 
-celltype_id_labels = adata.obs["celltype"].astype("category").cat.codes.values
 num_types = len(np.unique(label_data.columns))
-id2type = dict(enumerate(adata.obs["celltype"].astype("category").cat.categories))
-adata.obs["celltype_id"] = celltype_id_labels
 adata.var["gene_name"] = adata.var.index.tolist()
 
 if config.load_model is not None:
@@ -284,8 +275,8 @@ all_counts = (
 )
 genes = adata.var["gene_name"].tolist()
 
-celltypes_labels = adata.obs["celltype_id"].tolist()  # make sure count from 0
-celltypes_labels = np.array(celltypes_labels)
+celltypes_labels = np.array(adata.obsm["cell_proportions"])
+print(celltypes_labels)
 
 batch_ids = adata.obs["batch_id"].tolist()
 num_batch_types = len(set(batch_ids))
@@ -1002,6 +993,12 @@ def test(model: nn.Module, adata: DataLoader) -> float:
 
     return predictions, celltypes_labels, results
 
+
+
+"""
+# Test results:
+
+
 predictions, labels, results = test(best_model, adata_test)
 adata_test_raw.obs["predictions"] = [id2type[p] for p in predictions]
 
@@ -1050,3 +1047,4 @@ results["test/confusion_matrix"] = wandb.Image(
     str(save_dir / "confusion_matrix.png"),
     caption=f"confusion matrix",
 )
+"""
