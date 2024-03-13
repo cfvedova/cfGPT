@@ -13,6 +13,7 @@ import warnings
 
 import torch
 from anndata import AnnData
+import pandas as pd
 import scanpy as sc
 import scvi
 import numpy as np
