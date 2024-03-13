@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import tqdm
 from tensorflow import keras
 from tensorflow.keras import layers
 from keras.models import Sequential
@@ -28,8 +29,8 @@ import scipy.sparse as sp
 
 
 # Hyperparameters
-num_samples = 1000
-num_cells_to_extract = 5000
+num_samples = 50000
+num_cells_to_extract = 1000
 print("\nNumber of bulk RNAseq samples to simulate =", num_samples)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", num_cells_to_extract)
 
@@ -140,7 +141,7 @@ cells_by_type = {cell_type: expression_data[expression_data['cell'] == cell_type
 all_cell_types_set = set(all_cell_types)
 
 # Loop to create the simulated samples
-for sample_num in range(1, num_samples + 1):
+for sample_num in tqdm.tqdm(range(1, num_samples + 1)):
     selected_cells_list = []
     random_proportions = np.random.dirichlet(np.ones(len(all_cell_types)), size=1)[0]
     cell_type_proportions = pd.Series(index=all_cell_types, dtype=float).fillna(0)
