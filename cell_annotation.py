@@ -282,6 +282,8 @@ batch_ids = adata.obs["batch_id"].tolist()
 num_batch_types = len(set(batch_ids))
 batch_ids = np.array(batch_ids)
 
+print(all_counts)
+print(celltype_labels)
 (
     train_data,
     valid_data,
@@ -292,6 +294,9 @@ batch_ids = np.array(batch_ids)
 ) = train_test_split(
     all_counts, celltypes_labels, batch_ids, test_size=0.1, shuffle=True
 )
+print(train_data)
+print(train_celltype_labels)
+print(train_batch_labels)
 
 if config.load_model is None:
     vocab = Vocab(
@@ -634,9 +639,12 @@ def train(model: nn.Module, loader: DataLoader) -> None:
                 print(torch.count_nonzero(celltype_labels))
                 print(output_dict["cls_output"].shape)
                 print(celltype_labels.shape)
+
+                
                 
                 error_rate = mean_squared_error(celltype_labels,output_dict["cls_output"])
                 print(error_rate)
+                sys.exit()
             if CCE:
                 loss_cce = 10 * output_dict["loss_cce"]
                 loss = loss + loss_cce
@@ -870,6 +878,7 @@ define_wandb_metrcis()
 for epoch in range(1, epochs + 1):
     epoch_start_time = time.time()
     train_data_pt, valid_data_pt = prepare_data(sort_seq_batch=per_seq_batch_sample)
+    print(train_data_pt)
     train_loader = prepare_dataloader(
         train_data_pt,
         batch_size=batch_size,
@@ -877,6 +886,7 @@ for epoch in range(1, epochs + 1):
         intra_domain_shuffle=True,
         drop_last=False,
     )
+    print(train_loader)
     valid_loader = prepare_dataloader(
         valid_data_pt,
         batch_size=eval_batch_size,
