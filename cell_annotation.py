@@ -630,9 +630,9 @@ def train(model: nn.Module, loader: DataLoader) -> None:
                 loss = loss + loss_cls
                 metrics_to_log.update({"train/cls": loss_cls.item()})
                 print(output_dict["cls_output"])
-                print(celltype_labels)
-                print(output_dict["cls_output"].shape())
-                print(celltype_labels.shape())
+                print(torch.count_nonzero(celltype_labels))
+                print(output_dict["cls_output"].shape)
+                print(celltype_labels.shape)
                 
                 error_rate = mean_squared_error(celltype_labels,output_dict["cls_output"])
                 print(error_rate)
