@@ -365,7 +365,10 @@ def prepare_data(sort_seq_batch=False) -> Tuple[Dict[str, torch.Tensor]]:
     tensor_batch_labels_train = torch.from_numpy(train_batch_labels).long()
     tensor_batch_labels_valid = torch.from_numpy(valid_batch_labels).long()
 
+    print("Change to a long below:")
+    print(train_celltype_labels)
     tensor_celltype_labels_train = torch.from_numpy(train_celltype_labels).long()
+    print(tensor_celltype_labels_train)
     tensor_celltype_labels_valid = torch.from_numpy(valid_celltype_labels).long()
 
     if sort_seq_batch:  # TODO: update to random pick seq source in each traning batch
