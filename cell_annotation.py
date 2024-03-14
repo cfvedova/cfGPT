@@ -17,7 +17,6 @@ import pickle
 import torch
 from anndata import AnnData
 import scanpy as sc
-import scvi
 import seaborn as sns
 import numpy as np
 import wandb
@@ -34,7 +33,7 @@ from torchtext._torchtext import (
 )
 from sklearn.metrics import confusion_matrix
 
-sys.path.insert(0, "../")
+#sys.path.insert(0, "../")
 import scgpt as scg
 from scgpt.model import TransformerModel, AdversarialDiscriminator
 from scgpt.tokenizer import tokenize_and_pad_batch, random_mask_value
