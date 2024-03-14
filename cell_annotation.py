@@ -33,7 +33,7 @@ from torchtext._torchtext import (
 )
 from sklearn.metrics import confusion_matrix
 
-#sys.path.insert(0, "../")
+sys.path.insert(0, "../")
 import scgpt as scg
 from scgpt.model import TransformerModel, AdversarialDiscriminator
 from scgpt.tokenizer import tokenize_and_pad_batch, random_mask_value
@@ -64,7 +64,7 @@ hyperparameter_defaults = dict(
     ecs_thres=0.0, # Elastic cell similarity objective, 0.0 to 1.0, 0.0 to disable
     dab_weight=0.0,
     lr=1e-4,
-    batch_size=32,
+    batch_size=64,
     layer_size=128,
     nlayers=4,  # number of nn.TransformerEncoderLayer in nn.TransformerEncoder
     nhead=4,  # number of heads in nn.MultiheadAttention
@@ -418,6 +418,7 @@ def prepare_dataloader(
 ) -> DataLoader:
     if num_workers == 0:
         num_workers = min(len(os.sched_getaffinity(0)), batch_size // 2)
+        print(f"Number of workers: {num_workers}")
 
     dataset = SeqDataset(data_pt)
 
@@ -500,7 +501,7 @@ if config.load_model is not None:
         model_dict.update(pretrained_dict)
         model.load_state_dict(model_dict)
 
-""" pre_freeze_param_count = sum(dict((p.data_ptr(), p.numel()) for p in model.parameters() if p.requires_grad).values())
+pre_freeze_param_count = sum(dict((p.data_ptr(), p.numel()) for p in model.parameters() if p.requires_grad).values())
 
 ### FREEZE ENCODER ###
 # Freeze all pre-decoder weights
@@ -526,8 +527,9 @@ wandb.log(
             "info/pre_freeze_param_count": pre_freeze_param_count,
             "info/post_freeze_param_count": post_freeze_param_count,
         },
-) """
+)
 
+model = nn.DataParallel(model)
 model.to(device)
 wandb.watch(model)
 
