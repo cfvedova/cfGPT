@@ -275,7 +275,7 @@ all_counts = (
 )
 genes = adata.var["gene_name"].tolist()
 
-celltypes_labels = np.array(adata.obsm["cell_proportions"])
+celltypes_labels = np.array(adata.obsm["cell_proportions"]) * 100 #Scale to better fit data
 print(celltypes_labels)
 
 batch_ids = adata.obs["batch_id"].tolist()
@@ -312,7 +312,7 @@ tokenized_train = tokenize_and_pad_batch(
     vocab=vocab,
     pad_token=pad_token,
     pad_value=pad_value,
-    append_cls=True,  # append <cls> token at the beginning
+    append_cls=True,  # append <cls> token at the beginni
     include_zero_gene=include_zero_gene,
 )
 tokenized_valid = tokenize_and_pad_batch(
@@ -367,9 +367,9 @@ def prepare_data(sort_seq_batch=False) -> Tuple[Dict[str, torch.Tensor]]:
 
     print("Change to a long below:")
     print(train_celltype_labels)
-    tensor_celltype_labels_train = torch.from_numpy(train_celltype_labels).long()
+    tensor_celltype_labels_train = torch.from_numpy(train_celltype_labels)
     print(tensor_celltype_labels_train)
-    tensor_celltype_labels_valid = torch.from_numpy(valid_celltype_labels).long()
+    tensor_celltype_labels_valid = torch.from_numpy(valid_celltype_labels)
 
     if sort_seq_batch:  # TODO: update to random pick seq source in each traning batch
         train_sort_ids = np.argsort(train_batch_labels)
