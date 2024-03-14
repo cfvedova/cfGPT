@@ -25,13 +25,14 @@ import matplotlib.pyplot as plt
 from torch import nn
 from torch.nn import functional as F
 from torch.utils.data import Dataset, DataLoader
+from torchmetrics.functional.regression import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
 from torchtext.vocab import Vocab
 from torchtext._torchtext import (
     Vocab as VocabPybind,
 )
-from sklearn.metrics import confusion_matrix, mean_squared_error
+from sklearn.metrics import confusion_matrix
 
 sys.path.insert(0, "../")
 import scgpt as scg
