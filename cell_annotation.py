@@ -64,7 +64,7 @@ hyperparameter_defaults = dict(
     ecs_thres=0.0, # Elastic cell similarity objective, 0.0 to 1.0, 0.0 to disable
     dab_weight=0.0,
     lr=1e-4,
-    batch_size=64,
+    batch_size=16,
     layer_size=128,
     nlayers=4,  # number of nn.TransformerEncoderLayer in nn.TransformerEncoder
     nhead=4,  # number of heads in nn.MultiheadAttention
@@ -882,7 +882,7 @@ for epoch in range(1, epochs + 1):
         intra_domain_shuffle=False,
         drop_last=False,
     )
-
+    print("Starting training")
     if config.do_train:
         train(
             model,
