@@ -31,7 +31,7 @@ from torchtext.vocab import Vocab
 from torchtext._torchtext import (
     Vocab as VocabPybind,
 )
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, mean_squared_error
 
 sys.path.insert(0, "../")
 import scgpt as scg
@@ -629,12 +629,13 @@ def train(model: nn.Module, loader: DataLoader) -> None:
                 loss_cls = criterion_cls(output_dict["cls_output"], celltype_labels)
                 loss = loss + loss_cls
                 metrics_to_log.update({"train/cls": loss_cls.item()})
-
-                error_rate = 1 - (
-                    (output_dict["cls_output"].argmax(1) == celltype_labels)
-                    .sum()
-                    .item()
-                ) / celltype_labels.size(0)
+                print(output_dict["cls_output"])
+                print(celltype_labels)
+                print(output_dict["cls_output"].shape())
+                print(celltype_labels.shape())
+                
+                error_rate = mean_squared_error(celltype_labels,output_dict["cls_output"])
+                print(error_rate)
             if CCE:
                 loss_cce = 10 * output_dict["loss_cce"]
                 loss = loss + loss_cce
