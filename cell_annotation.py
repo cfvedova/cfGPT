@@ -831,11 +831,10 @@ def evaluate(model: nn.Module, loader: DataLoader, return_raw: bool = False) -> 
                     loss_dab = criterion_dab(output_dict["dab_output"], batch_labels)
 
             total_loss += loss.item() * len(input_gene_ids)
-            accuracy = (output_values.argmax(1) == celltype_labels).sum().item()
-            total_error += (1 - accuracy / len(input_gene_ids)) * len(input_gene_ids)
+            total_error += mean_squared_error(celltype_labels,output_values)
             total_dab += loss_dab.item() * len(input_gene_ids) if DAB else 0.0
             total_num += len(input_gene_ids)
-            preds = output_values.argmax(1).cpu().numpy()
+            preds = output_values.cpu().numpy()
             predictions.append(preds)
 
     wandb.log(
