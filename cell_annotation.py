@@ -283,7 +283,7 @@ num_batch_types = len(set(batch_ids))
 batch_ids = np.array(batch_ids)
 
 print(all_counts)
-print(celltype_labels)
+print(celltypes_labels)
 (
     train_data,
     valid_data,
