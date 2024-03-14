@@ -276,14 +276,11 @@ all_counts = (
 genes = adata.var["gene_name"].tolist()
 
 celltypes_labels = np.array(adata.obsm["cell_proportions"]) * 100 #Scale to better fit data
-print(celltypes_labels)
 
 batch_ids = adata.obs["batch_id"].tolist()
 num_batch_types = len(set(batch_ids))
 batch_ids = np.array(batch_ids)
 
-print(all_counts)
-print(celltypes_labels)
 (
     train_data,
     valid_data,
@@ -294,9 +291,6 @@ print(celltypes_labels)
 ) = train_test_split(
     all_counts, celltypes_labels, batch_ids, test_size=0.1, shuffle=True
 )
-print(train_data)
-print(train_celltype_labels)
-print(train_batch_labels)
 
 if config.load_model is None:
     vocab = Vocab(
@@ -365,10 +359,7 @@ def prepare_data(sort_seq_batch=False) -> Tuple[Dict[str, torch.Tensor]]:
     tensor_batch_labels_train = torch.from_numpy(train_batch_labels).long()
     tensor_batch_labels_valid = torch.from_numpy(valid_batch_labels).long()
 
-    print("Change to a long below:")
-    print(train_celltype_labels)
     tensor_celltype_labels_train = torch.from_numpy(train_celltype_labels)
-    print(tensor_celltype_labels_train)
     tensor_celltype_labels_valid = torch.from_numpy(valid_celltype_labels)
 
     if sort_seq_batch:  # TODO: update to random pick seq source in each traning batch
@@ -638,16 +629,7 @@ def train(model: nn.Module, loader: DataLoader) -> None:
                 loss_cls = criterion_cls(output_dict["cls_output"], celltype_labels)
                 loss = loss + loss_cls
                 metrics_to_log.update({"train/cls": loss_cls.item()})
-                print(output_dict["cls_output"])
-                print(torch.count_nonzero(celltype_labels))
-                print(output_dict["cls_output"].shape)
-                print(celltype_labels.shape)
-
-                
-                
                 error_rate = mean_squared_error(celltype_labels,output_dict["cls_output"])
-                print(error_rate)
-                sys.exit()
             if CCE:
                 loss_cce = 10 * output_dict["loss_cce"]
                 loss = loss + loss_cce
@@ -881,7 +863,6 @@ define_wandb_metrcis()
 for epoch in range(1, epochs + 1):
     epoch_start_time = time.time()
     train_data_pt, valid_data_pt = prepare_data(sort_seq_batch=per_seq_batch_sample)
-    print(train_data_pt)
     train_loader = prepare_dataloader(
         train_data_pt,
         batch_size=batch_size,
@@ -889,7 +870,6 @@ for epoch in range(1, epochs + 1):
         intra_domain_shuffle=True,
         drop_last=False,
     )
-    print(train_loader)
     valid_loader = prepare_dataloader(
         valid_data_pt,
         batch_size=eval_batch_size,
@@ -897,7 +877,6 @@ for epoch in range(1, epochs + 1):
         intra_domain_shuffle=False,
         drop_last=False,
     )
-    print("Starting training")
     if config.do_train:
         train(
             model,
