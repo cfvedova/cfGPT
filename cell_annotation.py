@@ -64,7 +64,7 @@ hyperparameter_defaults = dict(
     MVC=False, # Masked value prediction for cell embedding
     ecs_thres=0.0, # Elastic cell similarity objective, 0.0 to 1.0, 0.0 to disable
     dab_weight=0.0,
-    lr=1e-2,
+    lr=1e-4,
     batch_size=16,
     layer_size=128,
     nlayers=4,  # number of nn.TransformerEncoderLayer in nn.TransformerEncoder
@@ -76,7 +76,7 @@ hyperparameter_defaults = dict(
     pre_norm=False,
     amp=True,  # Automatic Mixed Precision
     include_zero_gene = False,
-    freeze = False, #freeze
+    freeze = True, #freeze
     DSBN = False,  # Domain-spec batchnorm
 )
 
