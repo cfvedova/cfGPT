@@ -1,0 +1,12 @@
+1. lr modifications
+2. Disable Adam
+3. AMP (Automatic Mixed Precision)- changes precision for different tasks (ie. int/float16/etc.) - could be messing with performance with new type
+4. Freeze model parameters more correctly
+5. Get some data output to see Ali's advice
+    a. Likely will be nonsensical output
+6. More data?
+7. More precise generation of data?
+    a. Look at Scaden
+8. Deep Dive into Scaden topics
+    a. Look at MSE info, etc.
+9. 
