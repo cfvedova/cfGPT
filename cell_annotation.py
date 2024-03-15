@@ -98,7 +98,7 @@ mask_ratio = config.mask_ratio
 mask_value = "auto"  # for masked values, now it should always be auto
 
 include_zero_gene = config.include_zero_gene  # if True, include zero genes among hvgs in the training
-max_seq_len = 3001
+max_seq_len = 18001
 n_bins = config.n_bins
 
 # input/output representation
