@@ -76,7 +76,7 @@ hyperparameter_defaults = dict(
     pre_norm=False,
     amp=True,  # Automatic Mixed Precision
     include_zero_gene = False,
-    freeze = True, #freeze
+    freeze = False, #freeze
     DSBN = False,  # Domain-spec batchnorm
 )
 
