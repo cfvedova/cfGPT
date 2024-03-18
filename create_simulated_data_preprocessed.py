@@ -3,14 +3,16 @@ import os
 import random
 import numpy as np
 import pandas as pd
+import scanpy as sc
 import tqdm
 from scipy import sparse
 
 # Hyperparameters
-num_samples = 50000
-num_cells_to_extract = 1000
-print("\nNumber of bulk RNAseq samples to simulate =", num_samples)
-print("Number of cells to extract for each simulated bulk RNAseq sample =", num_cells_to_extract)
+NUM_SAMPLES = 50000
+NUM_CELLS_TO_EXTRACT = 1000
+HVG_SELECTION = True
+print("\nNumber of bulk RNAseq samples to simulate =", NUM_SAMPLES)
+print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_CELLS_TO_EXTRACT)
 
 print("Loading scRNA-seq data...")
 adata=ad.read_h5ad("./Dataset/TabulaSapiens.h5ad")
@@ -18,41 +20,34 @@ adata=ad.read_h5ad("./Dataset/TabulaSapiens.h5ad")
 print("Loaded scRNAseq data")
 
 print(adata)
-# Load your actual bulk RNAseq data
-# Make sure to adjust the path to the file containing your data
-cfrna_data = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
-                         sep='\t', header=None, names=['gene_names', 'counts'])
-
-# Convert counts to float
-cfrna_data['counts'] = cfrna_data['counts'].astype(float)
-
-# Normalize the cfRNAseq data
-cpm = cfrna_data['counts'] / cfrna_data['counts'].sum() * 1e6
-log_cpm = np.log1p(cpm)
-
-# Create a DataFrame with gene names and normalized expression values
-cfrna_df = pd.DataFrame({'GeneName': cfrna_data['gene_names'], 'Expression': log_cpm})
-
-# Set the GeneName column as the index of cfRNA_df
-cfrna_df = cfrna_df.set_index('GeneName')
-print("Contents of cfrna_data:\n", cfrna_df)
-
-# Transpose to match X
-cfrna_df = cfrna_df.transpose()
-
-# Alphabetically ordering the genes
-cfrna_df = cfrna_df.sort_index(axis=1)
-print("Contents of cfrna_df:\n", cfrna_df)
-
-# INTERSECT SCRNASEQ GENES WITH BULKRNASEQ GENES
-
-print(adata.shape)
-
-# Get common genes
-common_genes = set(adata.var_names) & set(cfrna_df.columns)
-
-# Get the indices of the common genes in the scRNAseq data
-common_gene_indices = [idx for idx, gene in enumerate(adata.var_names) if gene in common_genes]
+if HVG_SELECTION:
+    sc.pp.highly_variable_genes(
+                adata,
+                layer=self.hvg_use_key,
+                n_top_genes=self.subset_hvg
+                if isinstance(self.subset_hvg, int)
+                else None,
+                batch_key=batch_key,
+                flavor="seurat_v3",
+                subset=True,
+            )
+    print(adata)
+else:
+    # Load your actual bulk RNAseq data
+    # Make sure to adjust the path to the file containing your data
+    cfrna_data = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
+                            sep='\t', header=None, names=['gene_names', 'counts'])
+    cfrna_data['counts'] = cfrna_data['counts'].astype(float)
+    cpm = cfrna_data['counts'] / cfrna_data['counts'].sum() * 1e6
+    log_cpm = np.log1p(cpm)
+    cfrna_df = pd.DataFrame({'GeneName': cfrna_data['gene_names'], 'Expression': log_cpm})
+    cfrna_df = cfrna_df.set_index('GeneName')
+    print("Contents of cfrna_data:\n", cfrna_df)
+    cfrna_df = cfrna_df.transpose()
+    cfrna_df = cfrna_df.sort_index(axis=1)
+    print("Contents of cfrna_df:\n", cfrna_df)
+    common_genes = set(adata.var_names) & set(cfrna_df.columns)
+    common_gene_indices = [idx for idx, gene in enumerate(adata.var_names) if gene in common_genes]
 
 scrnaseq_data = adata[:, common_gene_indices].copy()
 scrnaseq_data.X = adata[:, common_gene_indices].layers['raw_counts']
@@ -119,14 +114,14 @@ cells_by_type = {cell_type: expression_data[expression_data['cell'] == cell_type
 all_cell_types_set = set(all_cell_types)
 
 # Loop to create the simulated samples
-for sample_num in tqdm.tqdm(range(1, num_samples + 1)):
+for sample_num in tqdm.tqdm(range(1, NUM_SAMPLES + 1)):
     selected_cells_list = []
     random_proportions = np.random.dirichlet(np.ones(len(all_cell_types)), size=1)[0]
     cell_type_proportions = pd.Series(index=all_cell_types, dtype=float).fillna(0)
     total_cells = 0
 
     for cell_type, proportion in zip(all_cell_types, random_proportions):
-        num_cells_this_type = int(proportion * num_cells_to_extract)
+        num_cells_this_type = int(proportion * NUM_CELLS_TO_EXTRACT)
         cells_of_this_type = cells_by_type[cell_type]
         num_cells_this_type = min(num_cells_this_type, cells_of_this_type.shape[0])
         sampled_cells = cells_of_this_type.sample(num_cells_this_type)
