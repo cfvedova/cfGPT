@@ -30,6 +30,8 @@ if HVG_SELECTION:
                 subset=True,
             )
     print(adata)
+    scrnaseq_data = adata.copy()
+    scrnaseq_data.X = adata.layers['raw_counts']
 else:
     # Load your actual bulk RNAseq data
     # Make sure to adjust the path to the file containing your data
@@ -46,9 +48,8 @@ else:
     print("Contents of cfrna_df:\n", cfrna_df)
     common_genes = set(adata.var_names) & set(cfrna_df.columns)
     common_gene_indices = [idx for idx, gene in enumerate(adata.var_names) if gene in common_genes]
-
-scrnaseq_data = adata[:, common_gene_indices].copy()
-scrnaseq_data.X = adata[:, common_gene_indices].layers['raw_counts']
+    scrnaseq_data = adata[:, common_gene_indices].copy()
+    scrnaseq_data.X = adata[:, common_gene_indices].layers['raw_counts']
 
 # FILTER SC_RNASEQ DATA
 print("\nFiltering scRNAseq data")
