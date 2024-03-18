@@ -23,7 +23,7 @@ print(adata)
 if HVG_SELECTION:
     sc.pp.highly_variable_genes(
                 adata,
-                layer="X",
+                layer="raw_counts",
                 n_top_genes=3000,
                 batch_key=None,
                 flavor="seurat_v3",
