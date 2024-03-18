@@ -23,11 +23,9 @@ print(adata)
 if HVG_SELECTION:
     sc.pp.highly_variable_genes(
                 adata,
-                layer=self.hvg_use_key,
-                n_top_genes=self.subset_hvg
-                if isinstance(self.subset_hvg, int)
-                else None,
-                batch_key=batch_key,
+                layer="X",
+                n_top_genes=3000,
+                batch_key=None,
                 flavor="seurat_v3",
                 subset=True,
             )
