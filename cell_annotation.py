@@ -65,7 +65,7 @@ hyperparameter_defaults = dict(
     ecs_thres=0.0, # Elastic cell similarity objective, 0.0 to 1.0, 0.0 to disable
     dab_weight=0.0,
     lr=1e-4,
-    batch_size=8,
+    batch_size=16,
     layer_size=128,
     nlayers=4,  # number of nn.TransformerEncoderLayer in nn.TransformerEncoder
     nhead=4,  # number of heads in nn.MultiheadAttention
@@ -74,7 +74,7 @@ hyperparameter_defaults = dict(
     save_eval_interval=5,
     fast_transformer=True,
     pre_norm=False,
-    amp=False,  # Automatic Mixed Precision
+    amp=True,  # Automatic Mixed Precision
     include_zero_gene = False,
     freeze = False, #freeze
     DSBN = False,  # Domain-spec batchnorm
@@ -98,7 +98,7 @@ mask_ratio = config.mask_ratio
 mask_value = "auto"  # for masked values, now it should always be auto
 
 include_zero_gene = config.include_zero_gene  # if True, include zero genes among hvgs in the training
-max_seq_len = 4001
+max_seq_len = 3001
 n_bins = config.n_bins
 
 # input/output representation
@@ -188,14 +188,13 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 # Un-important columns: batch_id, str_batch (Assigned based on train or test)
 data_dir = Path(f"../data/{dataset_name}")
 
-with open("./Dataset/bulk_data.csv") as dataset_file:
+with open("./Dataset/hvg_bulk_data.csv") as dataset_file:
     adata = ad.read_csv(dataset_file)
-label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
+label_data = pd.read_csv("./Dataset/hvg_label_data.csv", index_col=0)
 ori_batch_col = "batch"
 adata.obsm["cell_proportions"] = label_data
-data_is_raw = True
 adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
-data_is_raw = False
+data_is_raw = True
 filter_gene_by_counts = False
 
 adata_test = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
