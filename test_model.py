@@ -555,6 +555,8 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
 
 predictions = test(best_model, adata_test)
 
+print(f"Model Predictions for celltype: {predictions}")
+
 palette_color = sns.color_palette('dark') 
   
 # plotting data on chart 
