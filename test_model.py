@@ -440,7 +440,7 @@ if ADV:
 
 scaler = torch.cuda.amp.GradScaler(enabled=config.amp)
 
-def evaluate(model: nn.Module, loader: DataLoader, return_raw: bool = False) -> float:
+def evaluate(model: nn.Module, loader: DataLoader) -> float:
     """
     Evaluate the model on the evaluation data.
     """
@@ -472,30 +472,11 @@ def evaluate(model: nn.Module, loader: DataLoader, return_raw: bool = False) -> 
                     #generative_training = False,
                 )
                 output_values = output_dict["cls_output"]
-
-                if DAB:
-                    loss_dab = criterion_dab(output_dict["dab_output"], batch_labels)
-
-            total_loss += loss.item() * len(input_gene_ids)
-            total_dab += loss_dab.item() * len(input_gene_ids) if DAB else 0.0
-            total_num += len(input_gene_ids)
+            
             preds = output_values.cpu().numpy()
             predictions.append(preds)
-
-    wandb.log(
-        {
-            "valid/mse": total_loss / total_num,
-            "valid/err": total_error / total_num,
-            "valid/dab": total_dab / total_num,
-            "valid/sum_mse_dab": (total_loss + dab_weight * total_dab) / total_num,
-            "epoch": epoch,
-        },
-    )
-
-    if return_raw:
-        return np.concatenate(predictions, axis=0)
-
-    return total_loss / total_num, total_error / total_num
+    
+    return np.concatenate(predictions, axis=0)
 
 ### INFERENCE ###
 def test(model: nn.Module, adata: ad.AnnData) -> float:
@@ -545,8 +526,7 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
     model.eval()
     predictions = evaluate(
         model,
-        loader=test_loader,
-        return_raw=True,
+        loader=test_loader
     )
 
     return predictions
