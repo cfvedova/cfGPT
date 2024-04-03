@@ -556,7 +556,7 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
 
 # Test results:
 
-predictions = test(best_model, adata_test)
+predictions = test(model, adata_test)
 
 print(f"Model Predictions for celltype: {predictions}")
 
