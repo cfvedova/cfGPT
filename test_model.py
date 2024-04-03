@@ -192,7 +192,7 @@ data_is_raw = True
 filter_gene_by_counts = False
 
 with open('./Dataset/arp3_protein_coding_feature_counts.txt') as test_data_file:
-    adata_test = ad.read_csv(test_data_file, delimiter='\t', first_column_names=True)
+    adata_test = ad.read_csv(test_data_file, delimiter='\t', first_column_names=True).transpose()
 print(adata_test)
 print(adata_test.var)
 print(adata_test.obs)
