@@ -540,7 +540,7 @@ print(f"Model Predictions for celltype: {predictions}")
 palette_color = sns.color_palette('dark') 
   
 # plotting data on chart 
-plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color, autopct='%.0f%%') 
+plt.pie(predictions[0], labels=celltypes_labels_names, colors=palette_color, autopct='%.0f%%') 
   
 # displaying chart 
 plt.show()
