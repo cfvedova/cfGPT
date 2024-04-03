@@ -548,6 +548,6 @@ plt.savefig(save_dir / "results.png")
 
 results["test/cell_umap"] = wandb.Image(
     str(save_dir / "results.png"),
-    caption=f"predictions pie chart {results['test/pred_pie']:.3f}",
+    caption=f"predictions pie chart {results['test/pred_pie_baseline']:.3f}",
 )
 wandb.log(results)
