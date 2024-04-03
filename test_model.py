@@ -456,7 +456,6 @@ def evaluate(model: nn.Module, loader: DataLoader, return_raw: bool = False) -> 
             input_values = batch_data["values"].to(device)
             target_values = batch_data["target_values"].to(device)
             batch_labels = batch_data["batch_labels"].to(device)
-            celltype_labels = batch_data["celltype_labels"].to(device)
 
             src_key_padding_mask = input_gene_ids.eq(vocab[pad_token])
             with torch.cuda.amp.autocast(enabled=config.amp):
@@ -473,13 +472,11 @@ def evaluate(model: nn.Module, loader: DataLoader, return_raw: bool = False) -> 
                     #generative_training = False,
                 )
                 output_values = output_dict["cls_output"]
-                loss = criterion_cls(output_values, celltype_labels)
 
                 if DAB:
                     loss_dab = criterion_dab(output_dict["dab_output"], batch_labels)
 
             total_loss += loss.item() * len(input_gene_ids)
-            total_error += mean_squared_error(celltype_labels,output_values)
             total_dab += loss_dab.item() * len(input_gene_ids) if DAB else 0.0
             total_num += len(input_gene_ids)
             preds = output_values.cpu().numpy()
