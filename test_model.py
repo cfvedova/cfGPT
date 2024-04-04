@@ -186,7 +186,7 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 # Important columns: celltype, gene_name, X (Raw data values)
 # Un-important columns: batch_id, str_batch (Assigned based on train or test)
 data_dir = Path(f"../data/{dataset_name}")
-label_data = pd.read_csv("./Dataset/hvg_label_data.csv", index_col=0)
+label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
 print(label_data)
 ori_batch_col = "batch"
 data_is_raw = True
