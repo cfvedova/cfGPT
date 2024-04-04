@@ -544,11 +544,12 @@ predictions = predictions / np.sum(predictions)
 palette_color = sns.color_palette('dark') 
   
 # plotting data on chart 
-plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color) 
+plt.pie(data, labels=keys, colors=palette_color, 
+        explode=explode, autopct='%.0f%%') 
   
 # displaying chart 
 plt.show()
-plt.savefig(save_dir / "results.png")
+plt.savefig(save_dir / "results.png", bbox_inches='tight')
 
 results["test/cell_umap"] = wandb.Image(
     str(save_dir / "results.png"),
