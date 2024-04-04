@@ -210,7 +210,8 @@ adata_test.var["gene_name"] = adata_test.var.index.tolist()
 
 if config.load_model is not None:
     model_dir = Path(config.load_model)
-    model_config_file = model_dir / "args.json"
+    base_model = Path("save/scGPT_human")
+    model_config_file = base_model / "args.json"
     model_file = model_dir / "model.pt"
     vocab_file = model_dir / "vocab.json"
 
@@ -242,6 +243,7 @@ if config.load_model is not None:
     d_hid = model_configs["d_hid"]
     nlayers = model_configs["nlayers"]
     n_layers_cls = model_configs["n_layers_cls"]
+    print(n_layers_cls)
 
 # set up the preprocessor, use the args to config the workflow
 preprocessor = Preprocessor(
