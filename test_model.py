@@ -541,12 +541,15 @@ print(f"Model Predictions for celltype: {predictions}")
 
 predictions = predictions / np.sum(predictions)
 
+explode = [0] * len(predictions)
+explode[np.argmax(predictions)] = 0.1
+
 palette_color = sns.color_palette('dark') 
   
 # plotting data on chart 
 # plotting data on chart 
 plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color, 
-        explode=predictions, autopct='%.0f%%') 
+        explode=explode, autopct='%.0f%%') 
   
 # displaying chart 
 plt.show()
