@@ -56,7 +56,7 @@ hyperparameter_defaults = dict(
     seed=0,
     dataset_name="tabula_sapiens",
     do_train=True,
-    load_model="save/scGPT_human",
+    load_model="save/tabula_sapiens-best-hvg",
     mask_ratio=0.0,
     epochs=10,
     n_bins=51,
@@ -210,9 +210,10 @@ adata_test.var["gene_name"] = adata_test.var.index.tolist()
 
 if config.load_model is not None:
     model_dir = Path(config.load_model)
-    model_config_file = model_dir / "args.json"
+    base_model = Path("save/scGPT_human")
+    model_config_file = base_model / "args.json"
     model_file = model_dir / "best_model.pt"
-    vocab_file = model_dir / "vocab.json"
+    vocab_file = base_model / "vocab.json"
 
     vocab = GeneVocab.from_file(vocab_file)
     shutil.copy(vocab_file, save_dir / "vocab.json")
