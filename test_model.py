@@ -195,7 +195,7 @@ filter_gene_by_counts = False
 with open('./Dataset/cfrna_gene_counts_by_sample_long.csv') as test_data_file:
     adata_test = ad.read_csv(test_data_file, first_column_names=True).transpose()
 
-print(adata_test)
+print(adata_test["arp4_ue_t_p_aligned_sorted_dedup_paired.bam"])
 print(adata_test.var)
 print(adata_test.obs)
 print(adata_test.X)
