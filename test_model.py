@@ -534,7 +534,7 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
 # Test results:
 
 predictions = np.absolute(test(model, adata_test))
-
+results = {}
 print(f"Model Predictions for celltype: {predictions}")
 
 palette_color = sns.color_palette('dark') 
