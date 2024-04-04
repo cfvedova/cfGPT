@@ -535,14 +535,16 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
 
 # Test results:
 
-predictions = np.absolute(test(model, adata_test))
+predictions = np.maximum(test(model, adata_test),0)[0]
 results = {}
 print(f"Model Predictions for celltype: {predictions}")
+
+predictions = predictions / np.sum(predictions)
 
 palette_color = sns.color_palette('dark') 
   
 # plotting data on chart 
-plt.pie(predictions[0], labels=celltypes_labels_names, colors=palette_color, autopct='%.0f%%') 
+plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color, autopct='%.0f%%') 
   
 # displaying chart 
 plt.show()
