@@ -477,7 +477,7 @@ def evaluate(model: nn.Module, loader: DataLoader) -> float:
             
             preds = output_values.cpu().numpy()
             predictions.append(preds)
-    
+    print(predictions)
     return np.concatenate(predictions, axis=0)
 
 ### INFERENCE ###
