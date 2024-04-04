@@ -192,15 +192,17 @@ ori_batch_col = "batch"
 data_is_raw = True
 filter_gene_by_counts = False
 
-with open('./Dataset/arp3_protein_coding_feature_counts.txt') as test_data_file:
-    adata_test = ad.read_csv(test_data_file, delimiter='\t', first_column_names=True).transpose()
+with open('./Dataset/cfrna_gene_counts_by_sample_long.csv') as test_data_file:
+    adata_test = ad.read_csv(test_data_file, first_column_names=True).transpose()
+
 print(adata_test)
 print(adata_test.var)
 print(adata_test.obs)
 print(adata_test.X)
+raise(error)
 
 adata_test.obs["batch_id"]  = adata_test.obs["str_batch"] = "0"
-        
+
 # make the batch category column
 batch_id_labels_test = adata_test.obs["str_batch"].astype("category").cat.codes.values
 adata_test.obs["batch_id"] = batch_id_labels_test
