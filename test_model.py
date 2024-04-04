@@ -535,8 +535,11 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
 
 # Test results:
 
-predictions = np.maximum(test(model, adata_test),0)
+predictions = test(model, adata_test)
+print(len(predictions[0]))
+predictions = np.maximum(predictions, 0)
 print(len(predictions))
+print(len(predictions[0]))
 results = {}
 print(f"Model Predictions for celltype: {predictions}")
 
