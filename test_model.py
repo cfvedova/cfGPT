@@ -476,6 +476,7 @@ def evaluate(model: nn.Module, loader: DataLoader) -> float:
                 output_values = output_dict["cls_output"]
             
             preds = output_values.cpu().numpy()
+            print(preds)
             predictions.append(preds)
     print(predictions)
     return np.concatenate(predictions, axis=0)
