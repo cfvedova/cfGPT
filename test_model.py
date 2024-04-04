@@ -546,7 +546,7 @@ palette_color = sns.color_palette('dark')
 # plotting data on chart 
 # plotting data on chart 
 plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color, 
-        explode=explode, autopct='%.0f%%') 
+        explode=predictions, autopct='%.0f%%') 
   
 # displaying chart 
 plt.show()
