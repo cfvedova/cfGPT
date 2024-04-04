@@ -544,7 +544,7 @@ predictions = predictions / np.sum(predictions)
 palette_color = sns.color_palette('dark') 
   
 # plotting data on chart 
-plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color, autopct='%.0f%%') 
+plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color) 
   
 # displaying chart 
 plt.show()
