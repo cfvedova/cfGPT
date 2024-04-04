@@ -479,6 +479,7 @@ def evaluate(model: nn.Module, loader: DataLoader) -> float:
             print(preds)
             predictions.append(preds)
     print(predictions)
+    print(num_types)
     return np.concatenate(predictions, axis=0)
 
 ### INFERENCE ###
@@ -537,10 +538,7 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
 # Test results:
 
 predictions = test(model, adata_test)
-print(len(predictions[0]))
 predictions = np.maximum(predictions, 0)
-print(len(predictions))
-print(len(predictions[0]))
 results = {}
 print(f"Model Predictions for celltype: {predictions}")
 
