@@ -544,6 +544,8 @@ results = {}
 print(f"Model Predictions for celltype: {predictions}")
 
 predictions = predictions / np.sum(predictions)
+celltypes_labels_names = celltypes_labels_names[predictions > 0.01]
+predictions = predictions[predictions > 0.01]
 
 explode = [0] * len(predictions)
 explode[np.argmax(predictions)] = 0.1
