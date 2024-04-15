@@ -111,6 +111,8 @@ cell_type_proportions_list = []
 # Precompute cells of each type
 cells_by_type = {cell_type: expression_data[expression_data['cell'] == cell_type] for cell_type in all_cell_types}
 all_cell_types_set = set(all_cell_types)
+print(all_cell_types)
+print(f"Num celltypes {len(all_cell_types)}")
 
 # Loop to create the simulated samples
 for sample_num in tqdm.tqdm(range(1, NUM_SAMPLES + 1)):
@@ -152,6 +154,7 @@ print("\nSimulated bulk RNAseq dataframe with variable cell proportions.\n", bul
 
 # Printing the cell type proportions
 print("Cell type proportions of simulated RNAseq dataframe", cell_type_proportions_df.head())
+print(f"Num celltypes result: {len(cell_type_proportions_df.columns)}")
 
 bulk_rnaseq_mean_expression_df.to_csv("./Dataset/bulk_data.csv")
 cell_type_proportions_df.to_csv("./Dataset/label_data.csv")
