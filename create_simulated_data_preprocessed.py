@@ -57,12 +57,9 @@ else:
 print("\nFiltering scRNAseq data")
 
 scrnaseq_data.raw = scrnaseq_data
-min_genes = 500
 max_mito = 0.05
 mito_genes = scrnaseq_data.var_names.str.startswith('mt-')
 scrnaseq_data.obs['percent_mito'] = np.sum(scrnaseq_data[:, mito_genes].X, axis=1) / np.sum(scrnaseq_data.X, axis=1)
-scrnaseq_data.obs['n_genes'] = np.sum(scrnaseq_data.X > 0, axis=1)
-scrnaseq_data = scrnaseq_data[scrnaseq_data.obs['n_genes'] > min_genes, :]
 scrnaseq_data = scrnaseq_data[scrnaseq_data.obs['percent_mito'] < max_mito, :]
 
 print("Filtered scRNAseq data")
