@@ -18,6 +18,8 @@ print("Loading scRNA-seq data...")
 adata=ad.read_h5ad("./Dataset/TabulaSapiens.h5ad")
 
 print("Loaded scRNAseq data")
+print(f"Original adata celltype labels: {adata.obs['cell_ontology_class'].unique()}")
+print(f"Length of adata celltype labels: {len(adata.obs['cell_ontology_class'].unique())}")
 
 print(adata)
 if HVG_SELECTION:
@@ -73,6 +75,7 @@ print("Preparing input data...")
 cell_type_labels = scrnaseq_data.obs['cell_ontology_class']
 print("Cell type labels extracted.")
 print("\nUnique cell_type_labels labels:\n", cell_type_labels.unique(), sep='\n')
+print("Number of them:", len(cell_type_labels.unique()))
 
 # Convert the sparse matrix to a dense array
 dense_X = scrnaseq_data.X.toarray() if sparse.issparse(scrnaseq_data.X) else scrnaseq_data.X
