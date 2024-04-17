@@ -188,9 +188,9 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 # Un-important columns: batch_id, str_batch (Assigned based on train or test)
 data_dir = Path(f"../data/{dataset_name}")
 
-with open("./Dataset/hvg_bulk_data.csv") as dataset_file:
+with open("./Dataset/bulk_data.csv") as dataset_file:
     adata = ad.read_csv(dataset_file)
-label_data = pd.read_csv("./Dataset/hvg_label_data.csv", index_col=0)
+label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
 ori_batch_col = "batch"
 adata.obsm["cell_proportions"] = label_data
 adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
