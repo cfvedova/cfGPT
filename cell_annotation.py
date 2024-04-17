@@ -197,8 +197,8 @@ adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
 data_is_raw = True
 filter_gene_by_counts = False
 
-adata_test = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
-                         sep='\t', header=None, names=['gene_names', 'counts'])
+#adata_test = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
+#                         sep='\t', header=None, names=['gene_names', 'counts'])
                 
 # make the batch category column
 batch_id_labels = adata.obs["str_batch"].astype("category").cat.codes.values
