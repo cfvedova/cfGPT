@@ -915,7 +915,7 @@ class ClsDecoder(nn.Module):
         """
         for layer in self._decoder:
             x = layer(x)
-        return self.out_layer(x)
+        return nn.ReLU(self.out_layer(x))
 
 
 class MVCDecoder(nn.Module):
