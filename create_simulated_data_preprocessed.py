@@ -10,7 +10,8 @@ from scipy import sparse
 # Hyperparameters
 NUM_SAMPLES = 50000
 NUM_CELLS_TO_EXTRACT = 1000
-HVG_SELECTION = True
+HVG_SELECTION = False
+DEG_SELECTION = True
 print("\nNumber of bulk RNAseq samples to simulate =", NUM_SAMPLES)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_CELLS_TO_EXTRACT)
 
@@ -34,6 +35,14 @@ if HVG_SELECTION:
     print(adata)
     scrnaseq_data = adata.copy()
     scrnaseq_data.X = adata.layers['raw_counts']
+elif DEG_SELECTION:
+    degs = pd.read_csv("./Dataset/omnicell_v1", index_col=0)
+    degs = degs.drop(labels="tissue", axis=1)
+    #Two methods: Drop per cell type and fill with 0. Option 2: find list of all and just slice
+    #Option 2:
+    unique_degs = degs.stack().unique()
+    scrnaseq_data = adata[:, unique_degs].copy()
+    scrnaseq_data.X = adata[:, unique_degs].layers['raw_counts']
 else:
     # Load your actual bulk RNAseq data
     # Make sure to adjust the path to the file containing your data
