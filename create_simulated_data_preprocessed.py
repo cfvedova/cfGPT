@@ -168,5 +168,12 @@ print("\nSimulated bulk RNAseq dataframe with variable cell proportions.\n", bul
 print("Cell type proportions of simulated RNAseq dataframe", cell_type_proportions_df.head())
 print(f"Num celltypes result: {len(cell_type_proportions_df.columns)}")
 
-bulk_rnaseq_mean_expression_df.to_csv("./Dataset/bulk_data.csv")
-cell_type_proportions_df.to_csv("./Dataset/label_data.csv")
+if HVG_SELECTION:
+    bulk_rnaseq_mean_expression_df.to_csv("./Dataset/hvg_bulk_data.csv")
+    cell_type_proportions_df.to_csv("./Dataset/hvg_label_data.csv")
+elif DEG_SELECTION:
+    bulk_rnaseq_mean_expression_df.to_csv("./Dataset/deg_bulk_data.csv")
+    cell_type_proportions_df.to_csv("./Dataset/deg_label_data.csv")
+else:
+    bulk_rnaseq_mean_expression_df.to_csv("./Dataset/bulk_data.csv")
+    cell_type_proportions_df.to_csv("./Dataset/label_data.csv")
