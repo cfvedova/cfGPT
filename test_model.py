@@ -372,7 +372,10 @@ if config.load_model is not None:
     except:
         # only load params that are in the model and match the size
         model_dict = model.state_dict()
-        pretrained_dict = torch.load(model_file)
+        if not torch.cuda.is_available():
+            pretrained_dict = torch.load(model_file, map_location=torch.device('cpu'))
+        else:
+            pretrained_dict = torch.load(model_file)
         pretrained_dict = {
             k: v
             for k, v in pretrained_dict.items()
