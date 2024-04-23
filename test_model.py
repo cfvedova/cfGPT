@@ -364,7 +364,10 @@ model = TransformerModel(
 )
 if config.load_model is not None:
     try:
-        model.load_state_dict(torch.load(model_file))
+        if not torch.cuda.is_available():
+            model.load_state_dict(torch.load(model_file, map_location=torch.device('cpu')))
+        else:
+            model.load_state_dict(torch.load(model_file))
         logger.info(f"Loading all model params from {model_file}")
     except:
         # only load params that are in the model and match the size
@@ -547,7 +550,7 @@ explode = [0] * len(predictions)
 explode[np.argmax(predictions)] = 0.1
 
 palette_color = sns.color_palette('dark') 
-  
+
 # plotting data on chart 
 # plotting data on chart 
 plt.pie(predictions, labels=celltypes_labels_names, colors=palette_color, 
