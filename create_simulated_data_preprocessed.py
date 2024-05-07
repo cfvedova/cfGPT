@@ -128,16 +128,29 @@ print(f"Num celltypes {len(all_cell_types)}")
 
 # Loop to create the simulated samples
 for sample_num in tqdm.tqdm(range(1, NUM_SAMPLES + 1)):
+    # Create sparse samples by subsampling all cell types
+    num_cell_types_chosen = np.random.randint(1, len(all_cell_types)+1)
     selected_cells_list = []
-    random_proportions = np.random.dirichlet(np.ones(len(all_cell_types)), size=1)[0]
+    random_proportions = np.random.dirichlet(np.ones(num_cell_types_chosen), size=1)[0]
     cell_type_proportions = pd.Series(index=all_cell_types, dtype=float).fillna(0)
+    cell_types_chosen = np.random.randint(0, len(all_cell_types)+1, size=num_cell_types_chosen)
     total_cells = 0
 
-    for cell_type, proportion in zip(all_cell_types, random_proportions):
+    for cell_type, proportion in zip(cell_types_chosen, random_proportions):
         num_cells_this_type = int(proportion * NUM_CELLS_TO_EXTRACT)
         cells_of_this_type = cells_by_type[cell_type]
-        num_cells_this_type = min(num_cells_this_type, cells_of_this_type.shape[0])
-        sampled_cells = cells_of_this_type.sample(num_cells_this_type)
+
+        # Handle oversampling such that same cell is not chosen twice unless necessary
+        if num_cells_this_type > cells_of_this_type.shape[0]:
+            sampled_cells = cells_of_this_type.sample(cells_of_this_type.shape[0])
+            for times_to_sample in range(1, num_cells_this_type // cells_of_this_type.shape[0]):
+                partial_sampled_cells = cells_of_this_type.sample(cells_of_this_type.shape[0])
+                sampled_cells = sampled_cells.concat(partial_sampled_cells)
+            leftover_num_cells = num_cells_this_type - (num_cells_this_type // cells_of_this_type.shape[0])*cells_of_this_type.shape[0]
+            partial_sampled_cells = cells_of_this_type.sample(leftover_num_cells)
+            sampled_cells = sampled_cells.concat(partial_sampled_cells)
+        else:
+            sampled_cells = cells_of_this_type.sample(num_cells_this_type)
         selected_cells_list.append(sampled_cells)
         cell_type_proportions[cell_type] = num_cells_this_type
         total_cells += num_cells_this_type
