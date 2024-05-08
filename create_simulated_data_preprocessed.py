@@ -133,8 +133,10 @@ for sample_num in tqdm.tqdm(range(1, NUM_SAMPLES + 1)):
     selected_cells_list = []
     random_proportions = np.random.dirichlet(np.ones(num_cell_types_chosen), size=1)[0]
     cell_type_proportions = pd.Series(index=all_cell_types, dtype=float).fillna(0)
-    cell_types_chosen = np.random.randint(0, len(all_cell_types), size=num_cell_types_chosen)
+    cell_types_chosen_index = np.random.randint(0, len(all_cell_types), size=num_cell_types_chosen)
+    cell_types_chosen = np.array(all_cell_types)[cell_types_chosen_index]
     total_cells = 0
+    print(cell_types_chosen)
 
     for cell_type, proportion in zip(cell_types_chosen, random_proportions):
         num_cells_this_type = int(proportion * NUM_CELLS_TO_EXTRACT)
