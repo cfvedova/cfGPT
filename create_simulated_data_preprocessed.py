@@ -10,13 +10,13 @@ from scipy import sparse
 # Hyperparameters
 NUM_SAMPLES = 50000
 NUM_CELLS_TO_EXTRACT = 1000
-HVG_SELECTION = False
-DEG_SELECTION = True
+HVG_SELECTION = True
+DEG_SELECTION = False
 print("\nNumber of bulk RNAseq samples to simulate =", NUM_SAMPLES)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_CELLS_TO_EXTRACT)
 
 print("Loading scRNA-seq data...")
-adata=ad.read_h5ad("./Dataset/TabulaSapiensClean.h5ad")
+adata=ad.read_h5ad("./Dataset/TabulaSapiens.h5ad")
 
 print("Loaded scRNAseq data")
 print(f"Original adata celltype labels: {adata.obs['cell_ontology_class'].unique()}")
@@ -182,8 +182,8 @@ print("Cell type proportions of simulated RNAseq dataframe", cell_type_proportio
 print(f"Num celltypes result: {len(cell_type_proportions_df.columns)}")
 
 if HVG_SELECTION:
-    bulk_rnaseq_mean_expression_df.to_csv("./Dataset/hvg_bulk_data.csv")
-    cell_type_proportions_df.to_csv("./Dataset/hvg_label_data.csv")
+    bulk_rnaseq_mean_expression_df.to_csv("./Dataset/overcount_sparse_hvg_bulk_data.csv")
+    cell_type_proportions_df.to_csv("./Dataset/overcount_sparse_hvg_label_data.csv")
 elif DEG_SELECTION:
     bulk_rnaseq_mean_expression_df.to_csv("./Dataset/deg_bulk_data.csv")
     cell_type_proportions_df.to_csv("./Dataset/deg_label_data.csv")
