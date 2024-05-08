@@ -34,7 +34,46 @@
 14. Fast-attention
 
 1. Have higher max seq len
+A: Impossible due to space constraints
 
 2. Simulate only with hvg (highly variable genes, pre simulation)
+A: Seems to be promising. Loss is actually learning
 
 3. Clean up Tabula Sapiens data
+A: 
+
+Important
+1. Preprocessing that Scaden does:
+    a. Filter for cells with less than 500 genes
+2. Create biased simulated samples
+    a. sparse samples
+
+
+Steps:
+0. Run on simplified Tabula
+    a. Fails. Could be some mal interaction or bug
+    b. One possibility:
+        i . Only 63 cells now. So, could be an issue with not having the sparse samples
+    c. Explore the hvg calculation
+
+1. Test script
+    a. Plot for our sample
+        i. Pie chart of cell types
+        ii. Predicted numbers
+    b. Get results for actual bulk data
+        a. Bulk data test
+Run the above
+
+2. Generate like Scaden
+    Might be causing issue with simplified Tabula
+
+
+
+1. Test with DEGs instead of HVGs
+    a. With non-trimmed
+2. Test on huge dataset
+
+
+1. label hvg broken?
+2. sparse samples
+3. degs?
