@@ -150,7 +150,7 @@ for sample_num in tqdm.tqdm(range(1, NUM_SAMPLES + 1)):
                 sampled_cells = sampled_cells.concat(partial_sampled_cells)
             leftover_num_cells = num_cells_this_type - (num_cells_this_type // cells_of_this_type.shape[0])*cells_of_this_type.shape[0]
             partial_sampled_cells = cells_of_this_type.sample(leftover_num_cells)
-            sampled_cells = sampled_cells.concat(partial_sampled_cells)
+            sampled_cells = pd.concat([sampled_cells, partial_sampled_cells])
         else:
             sampled_cells = cells_of_this_type.sample(num_cells_this_type)
         selected_cells_list.append(sampled_cells)
