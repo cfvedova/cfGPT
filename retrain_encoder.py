@@ -215,6 +215,8 @@ all_counts = (
 print(all_counts)
 genes = adata.var["gene_name"].tolist()
 
+print(adata.obsm)
+print(adata.obsm["cell_proportions"])
 
 celltypes_labels = adata.obsm["cell_proportions"].tolist()  # make sure count from 0
 print(celltypes_labels)
