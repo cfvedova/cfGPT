@@ -124,7 +124,7 @@ if dataset_name == "tabula_sapiens" or dataset_name == "liver_cell":
     print("Printing labels")
     print(label_data)
     print(label_data.astype("category"))
-    adata.obsm["cell_proportions"] = label_data.astype("category")
+    adata.obsm["cell_proportions"] = label_data.astype("category").to_numpy()
     adata.obs["batch"] = np.zeros(len(label_data.index))
     data_is_raw = False
 
@@ -184,7 +184,7 @@ preprocessor = Preprocessor(
     use_key="X",  # the key in adata.layers to use as raw data
     filter_gene_by_counts=3,  # step 1
     filter_cell_by_counts=False,  # step 2
-    normalize_total=1e4,  # 3. whether to normalize the raw data and to what sum
+    normalize_total=False,  # 3. whether to normalize the raw data and to what sum
     result_normed_key="X_normed",  # the key in adata.layers to store the normalized data
     log1p=data_is_raw,  # 4. whether to log1p the normalized data
     result_log1p_key="X_log1p",
@@ -193,8 +193,10 @@ preprocessor = Preprocessor(
     binning=config.n_bins,  # 6. whether to bin the raw data and to what number of bins
     result_binned_key="X_binned",  # the key in adata.layers to store the binned data
 )
+print("Preprocess Step")
+print(adata.X)
 preprocessor(adata, batch_key="str_batch" if dataset_name != "heart_cell" and dataset_name != "liver_cell" else None)
-
+print(adata.X)
 # %%
 if per_seq_batch_sample:
     # sort the adata by batch_id in advance
@@ -210,6 +212,7 @@ all_counts = (
     if issparse(adata.layers[input_layer_key])
     else adata.layers[input_layer_key]
 )
+print(all_counts)
 genes = adata.var["gene_name"].tolist()
 
 
