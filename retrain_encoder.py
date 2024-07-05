@@ -50,7 +50,7 @@ os.environ["KMP_WARNINGS"] = "off"
 
 hyperparameter_defaults = dict(
     seed=42,
-    dataset_name="tabula_sapiens",
+    dataset_name="liver_cell",
     do_train=True,
     load_model="save/scGPT_human",
     mask_ratio=0.4,
@@ -113,7 +113,7 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 
 # %% [markdown]
 # ## Loading and preparing data
-if dataset_name == "tabula_sapiens":
+if dataset_name == "tabula_sapiens" or dataset_name == "liver_cell":
     with open("./Dataset/liver_deg_bulk_data.csv") as dataset_file:
         adata = ad.read_csv(dataset_file, first_column_names=True)
     label_data = pd.read_csv("./Dataset/liver_deg_label_data.csv", index_col=0)
@@ -193,7 +193,7 @@ preprocessor = Preprocessor(
     binning=config.n_bins,  # 6. whether to bin the raw data and to what number of bins
     result_binned_key="X_binned",  # the key in adata.layers to store the binned data
 )
-preprocessor(adata, batch_key="str_batch" if dataset_name != "heart_cell" else None)
+preprocessor(adata, batch_key="str_batch" if dataset_name != "heart_cell" and dataset_name != "liver_cell" else None)
 
 # %%
 if per_seq_batch_sample:
@@ -214,6 +214,7 @@ genes = adata.var["gene_name"].tolist()
 
 print(adata.obsm)
 print(adata.obsm["cell_proportions"])
+
 celltypes_labels = adata.obsm["cell_proportions"].tolist()  # make sure count from 0
 print(celltypes_labels)
 celltypes_labels = np.array(celltypes_labels)
