@@ -114,9 +114,9 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 # %% [markdown]
 # ## Loading and preparing data
 if dataset_name == "tabula_sapiens":
-    with open("./Dataset/bulk_data.csv") as dataset_file:
-        adata = ad.read_csv(dataset_file)
-    label_data = pd.read_csv("./Dataset/label_data.csv")
+    with open("./Dataset/liver_deg_bulk_data.csv") as dataset_file:
+        adata = ad.read_csv(dataset_file, first_column_names=True)
+    label_data = pd.read_csv("./Dataset/liver_deg_label_data.csv", index_col=0)
     ori_batch_col = "batch"
     print(adata)
     print(adata.var)
@@ -126,7 +126,7 @@ if dataset_name == "tabula_sapiens":
     print(label_data.astype("category"))
     adata.obsm["cell_proportions"] = label_data.astype("category")
     adata.obs["batch"] = np.zeros(len(label_data.index))
-    data_is_raw = True
+    data_is_raw = False
 
 
 # %%
@@ -212,7 +212,7 @@ all_counts = (
 )
 genes = adata.var["gene_name"].tolist()
 
-celltypes_labels = adata.obs["cell_proportions"].tolist()  # make sure count from 0
+celltypes_labels = adata.obsm["cell_proportions"].tolist()  # make sure count from 0
 print(celltypes_labels)
 celltypes_labels = np.array(celltypes_labels)
 
