@@ -212,7 +212,7 @@ all_counts = (
     if issparse(adata.layers[input_layer_key])
     else adata.layers[input_layer_key]
 )
-print(adata.layers[input_layer_key].A)
+print(adata.layers[input_layer_key])
 assert False
 genes = adata.var["gene_name"].tolist()
 
