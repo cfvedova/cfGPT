@@ -47,6 +47,14 @@ from scgpt.preprocess import Preprocessor
 from scgpt import SubsetsBatchSampler
 from scgpt.utils import set_seed, category_str2int, eval_scib_metrics
 
+### MODIFY THESE FOR YOUR SPECIFIC TEST CASE
+BASE_MODEL_NAME = "save/scGPT_human" # Base scGPT model that LOAD_MODEL_NAME was trained from
+DATASET_NAME_CONFIG = "tabula_sapiens" # Base dataset name
+LOAD_MODEL_NAME = "save/tabula_sapiens-best-hvg" # Model to be tested
+CELL_LABEL_DATASET_NAME = "./Dataset/label_data.csv" # Used to get output cellname list
+TEST_DATASET_NAME = './Dataset/arp4_cfrna_gene_counts.csv' # CSV Dataset you wish to test
+
+### Further hyperparameters usually do not need to be modified
 sc.set_figure_params(figsize=(6, 6))
 os.environ["KMP_WARNINGS"] = "off"
 warnings.filterwarnings('ignore')
@@ -54,9 +62,9 @@ warnings.filterwarnings('ignore')
 ### DEFAULT HYPERPARAMETERS ###
 hyperparameter_defaults = dict(
     seed=0,
-    dataset_name="tabula_sapiens",
-    do_train=True,
-    load_model="save/tabula_sapiens-best-hvg",
+    dataset_name=DATASET_NAME_CONFIG,
+    do_train=False,
+    load_model=LOAD_MODEL_NAME,
     mask_ratio=0.0,
     epochs=10,
     n_bins=51,
@@ -182,18 +190,18 @@ logger = scg.logger
 scg.utils.add_file_handler(logger, save_dir / "run.log")
 
 ### NEW DATASET LOADER ###
-# Will change depending on our input dataset (TALK WITH ANNE)
-# Important columns: celltype, gene_name, X (Raw data values)
-# Un-important columns: batch_id, str_batch (Assigned based on train or test)
+# Will change depending on our input dataset (ASK CONOR FOR QUESTIONS)
+# Important Data: gene_name (Will be set based on adata.var.index), X (Raw data values)
+# Un-important Data: batch_id, str_batch (Assigned based on train or test)
 data_dir = Path(f"../data/{dataset_name}")
-label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
+label_data = pd.read_csv(CELL_LABEL_DATASET_NAME, index_col=0)
 print(label_data)
 ori_batch_col = "batch"
 data_is_raw = True
 filter_gene_by_counts = False
 
-with open('./Dataset/arp4_cfrna_gene_counts.csv') as test_data_file:
-    adata_test = ad.read_csv(test_data_file, first_column_names=True).transpose()
+with open(TEST_DATASET_NAME) as test_data_file:
+    adata_test = ad.read_csv(test_data_file, first_column_names=True)
 
 adata_test.obs["batch_id"]  = adata_test.obs["str_batch"] = "0"
 
@@ -207,7 +215,7 @@ adata_test.var["gene_name"] = adata_test.var.index.tolist()
 
 if config.load_model is not None:
     model_dir = Path(config.load_model)
-    base_model = Path("save/scGPT_human")
+    base_model = Path(BASE_MODEL_NAME)
     model_config_file = base_model / "args.json"
     model_file = model_dir / "model.pt"
     vocab_file = model_dir / "vocab.json"
@@ -386,34 +394,6 @@ if config.load_model is not None:
         model_dict.update(pretrained_dict)
         model.load_state_dict(model_dict)
 
-pre_freeze_param_count = sum(dict((p.data_ptr(), p.numel()) for p in model.parameters() if p.requires_grad).values())
-
-### FREEZE ENCODER ###
-# Freeze all pre-decoder weights
-# For cf-RNA, we by default do not freeze
-# Can do warmup, train for a bit on decoder
-# loss function- softmax (1 class is viable), sigmoid (Can be multiple classes)
-# Decoder based model for it (Nlg natural language generation are decoder only)
-# Usually up to token i is unmasked then after it's masked.
-for name, para in model.named_parameters():
-    print("-"*20)
-    print(f"name: {name}")
-    if config.freeze and "encoder" in name and "transformer_encoder" not in name:
-    # if config.freeze and "encoder" in name:
-        print(f"freezing weights for: {name}")
-        para.requires_grad = False
-
-post_freeze_param_count = sum(dict((p.data_ptr(), p.numel()) for p in model.parameters() if p.requires_grad).values())
-
-logger.info(f"Total Pre freeze Params {(pre_freeze_param_count )}")
-logger.info(f"Total Post freeze Params {(post_freeze_param_count )}")
-wandb.log(
-        {
-            "info/pre_freeze_param_count": pre_freeze_param_count,
-            "info/post_freeze_param_count": post_freeze_param_count,
-        },
-)
-
 model = nn.DataParallel(model)
 model.to(device)
 wandb.watch(model)
@@ -444,6 +424,8 @@ if ADV:
     )
 
 scaler = torch.cuda.amp.GradScaler(enabled=config.amp)
+
+### ACTUAL TESTING. SETUP IS NOW DONE
 
 def evaluate(model: nn.Module, loader: DataLoader) -> float:
     """
@@ -541,14 +523,15 @@ def test(model: nn.Module, adata: ad.AnnData) -> float:
 # Test results:
 
 predictions = test(model, adata_test)
-predictions = np.maximum(predictions, 0)[0]
+predictions = np.maximum(predictions, 0)[0] # Ensure no negative predictions
 results = {}
 print(f"Model Predictions for celltype: {predictions}")
 
-predictions = predictions / np.sum(predictions)
-celltypes_labels_names = celltypes_labels_names[predictions > 0.01]
-predictions = predictions[predictions > 0.01]
+predictions = predictions / np.sum(predictions) # Normalize predictions
+celltypes_labels_names = celltypes_labels_names[predictions > 0.01] # Select top cell results
+predictions = predictions[predictions > 0.01] # Select top predictions
 
+# Present data as a pie chart
 explode = [0] * len(predictions)
 explode[np.argmax(predictions)] = 0.1
 
