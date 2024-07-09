@@ -11,7 +11,6 @@ import traceback
 from typing import List, Tuple, Dict, Union, Optional
 import warnings
 import pandas as pd
-# from . import asyn
 import pickle
 import torch
 from anndata import AnnData
