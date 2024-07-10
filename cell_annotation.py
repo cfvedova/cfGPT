@@ -188,7 +188,7 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 # Un-important columns: batch_id, str_batch (Assigned based on train or test)
 data_dir = Path(f"../data/{dataset_name}")
 
-if dataset_name = "liver_dataset":
+if dataset_name == "liver_dataset":
     with open("./Dataset/liver_deg_bulk_data.csv") as dataset_file:
         adata = ad.read_csv(dataset_file, first_column_names=True)
     label_data = pd.read_csv("./Dataset/liver_deg_label_data.csv", index_col=0)
