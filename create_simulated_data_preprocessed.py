@@ -10,13 +10,13 @@ from scipy import sparse
 # Hyperparameters
 NUM_SAMPLES = 50000
 NUM_CELLS_TO_EXTRACT = 1000
-HVG_SELECTION = True
-DEG_SELECTION = False
+HVG_SELECTION = False
+DEG_SELECTION = True
 print("\nNumber of bulk RNAseq samples to simulate =", NUM_SAMPLES)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_CELLS_TO_EXTRACT)
 
 print("Loading scRNA-seq data...")
-adata=ad.read_h5ad("./Dataset/TabulaSapiens.h5ad")
+adata=ad.read_h5ad("./Dataset/liver_all_cells_guillams.h5ad")
 
 print("Loaded scRNAseq data")
 print(f"Original adata celltype labels: {adata.obs['cell_ontology_class'].unique()}")
@@ -36,8 +36,8 @@ if HVG_SELECTION:
     scrnaseq_data = adata.copy()
     scrnaseq_data.X = adata.layers['raw_counts']
 elif DEG_SELECTION:
-    degs = pd.read_csv("./Dataset/omnicell_v1.csv", index_col=0)
-    degs = degs.drop(labels="tissue", axis=1)
+    degs = pd.read_csv("./Dataset/liver_degs.csv", index_col=0)
+    degs = degs.drop(labels="cell_type", axis=1)
     #Two methods: Drop per cell type and fill with 0. Option 2: find list of all and just slice
     #Option 2:
     unique_degs = degs.stack().unique()
