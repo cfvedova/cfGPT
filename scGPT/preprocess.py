@@ -179,7 +179,9 @@ class Preprocessor:
             binned_rows = []
             bin_edges = []
             layer_data = _get_obs_rep(adata, layer=key_to_process)
+            print(layer_data)
             layer_data = layer_data.A if issparse(layer_data) else layer_data
+            print(layer_data)
             if layer_data.min() < 0:
                 raise ValueError(
                     f"Assuming non-negative data, but got min value {layer_data.min()}."
@@ -194,7 +196,9 @@ class Preprocessor:
                     binned_rows.append(np.zeros_like(row, dtype=np.int64))
                     bin_edges.append(np.array([0] * n_bins))
                     continue
+                print(row)
                 non_zero_ids = row.nonzero()
+                print(non_zero_ids)
                 non_zero_row = row[non_zero_ids]
                 bins = np.quantile(non_zero_row, np.linspace(0, 1, n_bins - 1))
                 # bins = np.sort(np.unique(bins))
@@ -204,6 +208,7 @@ class Preprocessor:
                 assert non_zero_digits.min() >= 1
                 assert non_zero_digits.max() <= n_bins - 1
                 binned_row = np.zeros_like(row, dtype=np.int64)
+                print(non_zero_digits)
                 binned_row[non_zero_ids] = non_zero_digits
                 binned_rows.append(binned_row)
                 bin_edges.append(np.concatenate([[0], bins]))
