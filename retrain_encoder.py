@@ -193,7 +193,12 @@ preprocessor = Preprocessor(
     binning=config.n_bins,  # 6. whether to bin the raw data and to what number of bins
     result_binned_key="X_binned",  # the key in adata.layers to store the binned data
 )
+print("Before preprocessed X")
+print(adata.X)
 preprocessor(adata, batch_key="str_batch" if dataset_name != "heart_cell" and dataset_name != "liver_cell" else None)
+print("After preprocess X")
+print(adata.X)
+
 # %%
 if per_seq_batch_sample:
     # sort the adata by batch_id in advance
@@ -209,6 +214,8 @@ all_counts = (
     if issparse(adata.layers[input_layer_key])
     else adata.layers[input_layer_key]
 )
+print("Binned Results")
+print(all_counts)
 
 genes = adata.var["gene_name"].tolist()
 

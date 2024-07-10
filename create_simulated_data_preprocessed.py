@@ -42,7 +42,7 @@ elif DEG_SELECTION:
     #Option 2:
     unique_degs = degs.stack().unique()
     scrnaseq_data = adata[:, unique_degs].copy()
-    scrnaseq_data.X = adata[:, unique_degs].layers['raw_counts']
+    scrnaseq_data.X = adata[:, unique_degs].X
 else:
     # Load your actual bulk RNAseq data
     # Make sure to adjust the path to the file containing your data
