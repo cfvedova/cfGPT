@@ -55,7 +55,7 @@ warnings.filterwarnings('ignore')
 ### DEFAULT HYPERPARAMETERS ###
 hyperparameter_defaults = dict(
     seed=0,
-    dataset_name="tabula_sapiens",
+    dataset_name="liver_dataset",
     do_train=True,
     load_model="save/scGPT_human",
     mask_ratio=0.0,
@@ -188,14 +188,24 @@ scg.utils.add_file_handler(logger, save_dir / "run.log")
 # Un-important columns: batch_id, str_batch (Assigned based on train or test)
 data_dir = Path(f"../data/{dataset_name}")
 
-with open("./Dataset/bulk_data.csv") as dataset_file:
-    adata = ad.read_csv(dataset_file)
-label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
-ori_batch_col = "batch"
-adata.obsm["cell_proportions"] = label_data
-adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
-data_is_raw = True
-filter_gene_by_counts = False
+if dataset_name = "liver_dataset":
+    with open("./Dataset/liver_deg_bulk_data.csv") as dataset_file:
+        adata = ad.read_csv(dataset_file, first_column_names=True)
+    label_data = pd.read_csv("./Dataset/liver_deg_label_data.csv", index_col=0)
+    ori_batch_col = "batch"
+    adata.obsm["cell_proportions"] = label_data.astype("category").to_numpy()
+    adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
+    data_is_raw = False
+    filter_gene_by_counts = False
+else:
+    with open("./Dataset/bulk_data.csv") as dataset_file:
+        adata = ad.read_csv(dataset_file)
+    label_data = pd.read_csv("./Dataset/label_data.csv", index_col=0)
+    ori_batch_col = "batch"
+    adata.obsm["cell_proportions"] = label_data
+    adata.obs["batch_id"]  = adata.obs["str_batch"] = "0"
+    data_is_raw = True
+    filter_gene_by_counts = False
 
 #adata_test = pd.read_csv('./Dataset/arp3_protein_coding_feature_counts.txt',
 #                         sep='\t', header=None, names=['gene_names', 'counts'])
@@ -247,7 +257,7 @@ preprocessor = Preprocessor(
     use_key="X",  # the key in adata.layers to use as raw data
     filter_gene_by_counts=filter_gene_by_counts,  # step 1
     filter_cell_by_counts=False,  # step 2
-    normalize_total=1e4,  # 3. whether to normalize the raw data and to what sum
+    normalize_total=False,  # 3. whether to normalize the raw data and to what sum
     result_normed_key="X_normed",  # the key in adata.layers to store the normalized data
     log1p=data_is_raw,  # 4. whether to log1p the normalized data
     result_log1p_key="X_log1p",
