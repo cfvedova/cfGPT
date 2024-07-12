@@ -207,10 +207,11 @@ class Preprocessor:
                 assert non_zero_digits.min() >= 1
                 assert non_zero_digits.max() <= n_bins - 1
                 binned_row = np.zeros_like(row, dtype=np.int64)
+                logger.info(f"Zero values {np.where(row == 0)[0]}")
                 logger.info(f"binned row {binned_row}")
                 logger.info(f"Binner row shape {binned_row.shape}")
                 logger.info(f"Non Zero ids {non_zero_ids}")
-                logger.info(f"Non zero ids shape {non_zero_ids.shape}")
+                logger.info(f"Non zero ids shape {non_zero_ids[0].shape}")
                 logger.info(f"Indexed {binned_row[non_zero_ids]}")
                 logger.info(f"Indexed row shape {binned_row[non_zero_ids].shape}")
                 logger.info(f"Non zero digits {non_zero_digits}")
