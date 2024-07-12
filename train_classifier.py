@@ -64,7 +64,7 @@ hyperparameter_defaults = dict(
     MVC=False, # Masked value prediction for cell embedding
     ecs_thres=0.0, # Elastic cell similarity objective, 0.0 to 1.0, 0.0 to disable
     dab_weight=0.0,
-    lr=1e-4,
+    lr=1e-3,
     batch_size=16,
     layer_size=128,
     nlayers=4,  # number of nn.TransformerEncoderLayer in nn.TransformerEncoder
@@ -898,7 +898,7 @@ for epoch in range(1, epochs + 1):
     logger.info("-" * 89)
     logger.info(
         f"| end of epoch {epoch:3d} | time: {elapsed:5.2f}s | "
-        f"valid loss/mse {val_loss:5.4f} | err {val_err:5.4f}"
+        f"valid loss/cls {val_loss:5.4f} | err {val_err:5.4f}"
     )
     logger.info("-" * 89)
 
