@@ -198,7 +198,7 @@ class Preprocessor:
                     continue
                 logger.info(f"Row {row}")
                 non_zero_ids = row.nonzero()
-                logger.info(f"Non zero ids {len(non_zero_ids)}")
+                logger.info(f"Non zero ids {non_zero_ids.shape}")
                 non_zero_row = row[non_zero_ids]
                 bins = np.quantile(non_zero_row, np.linspace(0, 1, n_bins - 1))
                 # bins = np.sort(np.unique(bins))
@@ -210,7 +210,7 @@ class Preprocessor:
                 binned_row = np.zeros_like(row, dtype=np.int64)
                 logger.info(f"Binned Row {binned_row.shape}")
                 logger.info(f"Non zero digits {len(non_zero_digits)}")
-                logger.info(f"Indexed result {binned_row[non_zero_ids]}")
+                logger.info(f"Indexed result {len(binned_row[non_zero_ids])}")
                 binned_row[non_zero_ids] = non_zero_digits
                 binned_rows.append(binned_row)
                 bin_edges.append(np.concatenate([[0], bins]))
