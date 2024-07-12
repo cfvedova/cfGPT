@@ -198,7 +198,7 @@ class Preprocessor:
                     continue
                 logger.info(f"Row {row}")
                 non_zero_ids = row.nonzero()
-                logger.info(f"Non zero ids {non_zero_ids.shape}")
+                logger.info(f"Non zero ids {len(non_zero_ids[0])}")
                 non_zero_row = row[non_zero_ids]
                 bins = np.quantile(non_zero_row, np.linspace(0, 1, n_bins - 1))
                 # bins = np.sort(np.unique(bins))
