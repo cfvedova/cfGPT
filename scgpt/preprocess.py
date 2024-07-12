@@ -194,7 +194,6 @@ class Preprocessor:
                     binned_rows.append(np.zeros_like(row, dtype=np.int64))
                     bin_edges.append(np.array([0] * n_bins))
                     continue
-                logger.info(f"Row {row}")
                 non_zero_ids = row.nonzero()
                 non_zero_row = row[non_zero_ids]
                 bins = np.quantile(non_zero_row, np.linspace(0, 1, n_bins - 1))
