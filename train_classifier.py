@@ -35,7 +35,6 @@ from torchtext._torchtext import (
 from sklearn.metrics import confusion_matrix
 
 sys.path.insert(0, "../")
-import scgpt as scg
 from scgpt.model import TransformerModel, AdversarialDiscriminator
 from scgpt.tokenizer import tokenize_and_pad_batch, random_mask_value
 from scgpt.loss import (
@@ -179,8 +178,8 @@ dataset_name = config.dataset_name
 save_dir = Path(f"./save/{dataset_name}-{time.strftime('%b%d-%H-%M')}/")
 save_dir.mkdir(parents=True, exist_ok=True)
 print(f"save to {save_dir}")
-logger = scg.logger
-scg.utils.add_file_handler(logger, save_dir / "run.log")
+logger = scgpt.logger
+scgpt.utils.add_file_handler(logger, save_dir / "run.log")
 
 ### NEW DATASET LOADER ###
 # Will change depending on our input dataset (TALK WITH ANNE)

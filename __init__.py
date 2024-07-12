@@ -1,5 +1,4 @@
-import cfGPT.scGPT as scgpt
-import scgpt as scg
+import cfGPT.scgpt as scgpt
 from scgpt.model import TransformerModel, AdversarialDiscriminator
 from scgpt.tokenizer import tokenize_and_pad_batch, random_mask_value
 from scgpt.loss import (
