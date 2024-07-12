@@ -35,18 +35,18 @@ from torchtext._torchtext import (
 from sklearn.metrics import confusion_matrix
 
 sys.path.insert(0, "../")
-import scgpt as scg
-from scgpt.model import TransformerModel, AdversarialDiscriminator
-from scgpt.tokenizer import tokenize_and_pad_batch, random_mask_value
-from scgpt.loss import (
+import cfGPT.scgpt as scg
+from cfGPT.scgpt.model import TransformerModel, AdversarialDiscriminator
+from cfGPT.scgpt.tokenizer import tokenize_and_pad_batch, random_mask_value
+from cfGPT.scgpt.loss import (
     masked_mse_loss,
     masked_relative_error,
     criterion_neg_log_bernoulli,
 )
-from scgpt.tokenizer.gene_tokenizer import GeneVocab
-from scgpt.preprocess import Preprocessor
-from scgpt import SubsetsBatchSampler
-from scgpt.utils import set_seed, category_str2int, eval_scib_metrics
+from cfGPT.scgpt.tokenizer.gene_tokenizer import GeneVocab
+from cfGPT.scgpt.preprocess import Preprocessor
+from cfGPT.scgpt import SubsetsBatchSampler
+from cfGPT.scgpt.utils import set_seed, category_str2int, eval_scib_metrics
 
 sc.set_figure_params(figsize=(6, 6))
 os.environ["KMP_WARNINGS"] = "off"
