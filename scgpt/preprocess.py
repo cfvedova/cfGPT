@@ -206,7 +206,7 @@ class Preprocessor:
                 non_zero_digits = _digitize(non_zero_row, bins)
                 assert non_zero_digits.min() >= 1
                 assert non_zero_digits.max() <= n_bins - 1
-                binned_row = np.zeros_like(row, dtype=np.int64)
+                binned_row = np.array(np.zeros_like(row, dtype=np.int64))
                 logger.info(f"Zero values {np.where(row == 0)[0]}")
                 logger.info(f"binned row {binned_row}")
                 logger.info(f"Binner row shape {binned_row.shape}")
