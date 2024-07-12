@@ -35,6 +35,7 @@ from torchtext._torchtext import (
 from sklearn.metrics import confusion_matrix
 
 sys.path.insert(0, "../")
+import scgpt
 from scgpt.model import TransformerModel, AdversarialDiscriminator
 from scgpt.tokenizer import tokenize_and_pad_batch, random_mask_value
 from scgpt.loss import (
