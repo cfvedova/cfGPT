@@ -208,8 +208,8 @@ class Preprocessor:
                 assert non_zero_digits.min() >= 1
                 assert non_zero_digits.max() <= n_bins - 1
                 binned_row = np.zeros_like(row, dtype=np.int64)
-                logger.info(f"Non zero digits {non_zero_digits}")
-                assert False
+                logger.info(f"Binned Row {binned_row.shape}")
+                logger.info(f"Non zero digits {len(non_zero_digits)}")
                 binned_row[non_zero_ids] = non_zero_digits
                 binned_rows.append(binned_row)
                 bin_edges.append(np.concatenate([[0], bins]))
