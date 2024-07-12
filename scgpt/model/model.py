@@ -907,6 +907,7 @@ class ClsDecoder(nn.Module):
             self._decoder.append(activation())
             self._decoder.append(nn.LayerNorm(d_model))
         self.out_layer = nn.Linear(d_model, n_cls)
+        self.out_activation = nn.ReLU
 
     def forward(self, x: Tensor) -> Tensor:
         """
@@ -915,7 +916,8 @@ class ClsDecoder(nn.Module):
         """
         for layer in self._decoder:
             x = layer(x)
-        return nn.ReLU(self.out_layer(x))
+        x = self.out_layer(x)
+        return self.out_activation(x)
 
 
 class MVCDecoder(nn.Module):
