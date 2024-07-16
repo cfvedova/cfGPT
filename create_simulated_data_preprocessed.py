@@ -22,6 +22,7 @@ print(subset_adata)
 subset_cell_ontology_class = subset_adata.obs['cell_type']
 print(subset_cell_ontology_class)
 all_cell_types = subset_cell_ontology_class.values.unique()
+print(all_cell_types)
 adata=ad.read_h5ad("./Dataset/TabulaSapiensClean.h5ad")
 
 print("Loaded scRNAseq data")
