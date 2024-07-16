@@ -19,7 +19,8 @@ print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_
 print("Loading scRNA-seq data...")
 subset_adata = ad.read_h5ad(SUBSET_CELLTYPES)
 print(subset_adata)
-subset_cell_ontology_class = subset_adata.obs['cell_ontology_class']
+subset_cell_ontology_class = subset_adata.obs['cell_type']
+print(subset_cell_ontology_class)
 adata=ad.read_h5ad("./Dataset/TabulaSapiensClean.h5ad")
 
 print("Loaded scRNAseq data")
