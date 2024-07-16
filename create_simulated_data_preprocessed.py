@@ -21,6 +21,7 @@ subset_adata = ad.read_h5ad(SUBSET_CELLTYPES)
 print(subset_adata)
 subset_cell_ontology_class = subset_adata.obs['cell_type']
 print(subset_cell_ontology_class)
+all_cell_types = subset_cell_ontology_class.values.unique()
 adata=ad.read_h5ad("./Dataset/TabulaSapiensClean.h5ad")
 
 print("Loaded scRNAseq data")
@@ -116,8 +117,7 @@ if SUBSET_CELLTYPES is not None:
     subset_adata = ad.read_h5ad(SUBSET_CELLTYPES)
     print(subset_adata)
     subset_cell_ontology_class = subset_adata.obs['cell_ontology_class']
-    subset_celltype_labels = pd.Series(subset_cell_ontology_class.values, name='cell_type')
-    all_cell_types = subset_celltype_labels.unique()
+    all_cell_types = subset_cell_ontology_class.values.unique()
 else:
     all_cell_types = expression_data['cell'].unique()
 
