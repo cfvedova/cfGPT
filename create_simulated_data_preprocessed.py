@@ -12,6 +12,7 @@ NUM_SAMPLES = 50000
 NUM_CELLS_TO_EXTRACT = 1000
 HVG_SELECTION = False
 DEG_SELECTION = True
+SUBSET_CELLTYPES = "./Dataset/liver_all_cells_guillams.h5ad"
 print("\nNumber of bulk RNAseq samples to simulate =", NUM_SAMPLES)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_CELLS_TO_EXTRACT)
 
@@ -107,7 +108,16 @@ expression_data.insert(0, 'cell', cell_type_labels)
 print("\nscRNAseq dataframe with cell type labels:\n\n", expression_data.head())
 
 # List of all cell types (assuming 'cell' column contains the cell types)
-all_cell_types = expression_data['cell'].unique()
+if SUBSET_CELLTYPES != None:
+    subset_adata = ad.read_h5ad(SUBSET_CELLTYPES)
+    subset_cell_ontology_class = subset_adata.obs['cell_ontology_class']
+    subset_celltype_labels = pd.Series(subset_cell_ontology_class.values, name='cell_type')
+    all_cell_types = subset_celltype_labels.unique()
+else:
+    all_cell_types = expression_data['cell'].unique()
+
+print(all_cell_types)
+print(len(all_cell_types))
 
 # Dataframes to store the results
 bulk_rnaseq_mean_expression_df = pd.DataFrame()
