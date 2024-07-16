@@ -17,12 +17,6 @@ print("\nNumber of bulk RNAseq samples to simulate =", NUM_SAMPLES)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_CELLS_TO_EXTRACT)
 
 print("Loading scRNA-seq data...")
-subset_adata = ad.read_h5ad(SUBSET_CELLTYPES)
-print(subset_adata)
-subset_cell_ontology_class = subset_adata.obs['cell_type']
-print(subset_cell_ontology_class)
-all_cell_types = subset_cell_ontology_class.values.unique()
-print(all_cell_types)
 adata=ad.read_h5ad("./Dataset/TabulaSapiensClean.h5ad")
 
 print("Loaded scRNAseq data")
@@ -116,8 +110,7 @@ print("\nscRNAseq dataframe with cell type labels:\n\n", expression_data.head())
 # List of all cell types (assuming 'cell' column contains the cell types)
 if SUBSET_CELLTYPES is not None:
     subset_adata = ad.read_h5ad(SUBSET_CELLTYPES)
-    print(subset_adata)
-    subset_cell_ontology_class = subset_adata.obs['cell_ontology_class']
+    subset_cell_ontology_class = subset_adata.obs['cell_type']
     all_cell_types = subset_cell_ontology_class.values.unique()
 else:
     all_cell_types = expression_data['cell'].unique()
