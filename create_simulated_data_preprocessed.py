@@ -115,10 +115,6 @@ if SUBSET_CELLTYPES is not None:
 else:
     all_cell_types = expression_data['cell'].unique()
 
-print(all_cell_types)
-print(len(all_cell_types))
-assert False
-
 # Dataframes to store the results
 bulk_rnaseq_mean_expression_df = pd.DataFrame()
 cell_type_proportions_df = pd.DataFrame()
