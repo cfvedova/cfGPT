@@ -38,6 +38,7 @@ if HVG_SELECTION:
     scrnaseq_data.X = adata.layers['raw_counts']
 elif DEG_SELECTION:
     degs = pd.read_csv("./Dataset/liver_degs.csv", index_col=0)
+    print(degs)
     degs = degs.drop(labels="cell_type", axis=1)
     #Two methods: Drop per cell type and fill with 0. Option 2: find list of all and just slice
     #Option 2:
