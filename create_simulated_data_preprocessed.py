@@ -17,7 +17,7 @@ print("\nNumber of bulk RNAseq samples to simulate =", NUM_SAMPLES)
 print("Number of cells to extract for each simulated bulk RNAseq sample =", NUM_CELLS_TO_EXTRACT)
 
 print("Loading scRNA-seq data...")
-adata=ad.read_h5ad("./Dataset/liver_all_cells_guillams.h5ad")
+adata=ad.read_h5ad("./Dataset/TabulaSapiensClean.h5ad")
 
 print("Loaded scRNAseq data")
 print(f"Original adata celltype labels: {adata.obs['cell_ontology_class'].unique()}")
@@ -108,7 +108,7 @@ expression_data.insert(0, 'cell', cell_type_labels)
 print("\nscRNAseq dataframe with cell type labels:\n\n", expression_data.head())
 
 # List of all cell types (assuming 'cell' column contains the cell types)
-if SUBSET_CELLTYPES != None:
+if SUBSET_CELLTYPES is not None:
     subset_adata = ad.read_h5ad(SUBSET_CELLTYPES)
     subset_cell_ontology_class = subset_adata.obs['cell_ontology_class']
     subset_celltype_labels = pd.Series(subset_cell_ontology_class.values, name='cell_type')
@@ -118,6 +118,7 @@ else:
 
 print(all_cell_types)
 print(len(all_cell_types))
+assert False
 
 # Dataframes to store the results
 bulk_rnaseq_mean_expression_df = pd.DataFrame()
@@ -197,8 +198,8 @@ if HVG_SELECTION:
     bulk_rnaseq_mean_expression_df.to_csv("./Dataset/overcount_sparse_hvg_bulk_data.csv")
     cell_type_proportions_df.to_csv("./Dataset/overcount_sparse_hvg_label_data.csv")
 elif DEG_SELECTION:
-    bulk_rnaseq_mean_expression_df.to_csv("./Dataset/deg_bulk_data.csv")
-    cell_type_proportions_df.to_csv("./Dataset/deg_label_data.csv")
+    bulk_rnaseq_mean_expression_df.to_csv("./Dataset/deg_liver_tabula_bulk_data.csv")
+    cell_type_proportions_df.to_csv("./Dataset/deg_liver_tabula_label_data.csv")
 else:
     bulk_rnaseq_mean_expression_df.to_csv("./Dataset/bulk_data.csv")
     cell_type_proportions_df.to_csv("./Dataset/label_data.csv")
