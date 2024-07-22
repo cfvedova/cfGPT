@@ -131,6 +131,9 @@ cells_by_type = {cell_type: expression_data[expression_data['cell'] == cell_type
 all_cell_types_set = set(all_cell_types)
 print(all_cell_types)
 print(f"Num celltypes {len(all_cell_types)}")
+print(f"Cells by type length {len(cells_by_type)}")
+for i in all_cell_types:
+    print(f"Cell type {i} has {len(cells_by_type[i])} samples")
 
 # Loop to create the simulated samples
 for sample_num in tqdm.tqdm(range(1, NUM_SAMPLES + 1)):
@@ -147,6 +150,7 @@ for sample_num in tqdm.tqdm(range(1, NUM_SAMPLES + 1)):
     for cell_type, proportion in zip(cell_types_chosen, random_proportions):
         num_cells_this_type = int(proportion * NUM_CELLS_TO_EXTRACT)
         cells_of_this_type = cells_by_type[cell_type]
+        print(f"Cell type chosen {cell_type}")
 
         # Handle oversampling such that same cell is not chosen twice unless necessary
         if num_cells_this_type > cells_of_this_type.shape[0]:
