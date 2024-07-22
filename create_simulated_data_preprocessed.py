@@ -128,6 +128,11 @@ cell_type_proportions_list = []
 
 # Precompute cells of each type
 cells_by_type = {cell_type: expression_data[expression_data['cell'] == cell_type] for cell_type in all_cell_types}
+temp_all_cell_types = []
+for cell_type in all_cell_types:
+    if len(cells_by_type[cell_type]) != 0:
+        temp_all_cell_types.append(cell_type)
+all_cell_types = np.array(temp_all_cell_types)
 all_cell_types_set = set(all_cell_types)
 print(all_cell_types)
 print(f"Num celltypes {len(all_cell_types)}")
