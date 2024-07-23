@@ -55,7 +55,7 @@ warnings.filterwarnings('ignore')
 ### DEFAULT HYPERPARAMETERS ###
 hyperparameter_defaults = dict(
     seed=0,
-    dataset_name="liver_deg",
+    dataset_name="deg_liver_tabula",
     do_train=True,
     load_model="save/scGPT_human",
     mask_ratio=0.0,
@@ -195,8 +195,8 @@ if dataset_name == "liver_deg":
     data_is_raw = False
     filter_gene_by_counts = False
 else:
-    with open(f"./Dataset/{dataset_name}_bulk_data.csv") as dataset_file:[
-        adata = ad.read_csv(dataset_file)]
+    with open(f"./Dataset/{dataset_name}_bulk_data.csv") as dataset_file:
+        adata = ad.read_csv(dataset_file)
     label_data = pd.read_csv(f"./Dataset/{dataset_name}_label_data.csv", index_col=0)
     ori_batch_col = "batch"
     adata.obsm["cell_proportions"] = label_data
